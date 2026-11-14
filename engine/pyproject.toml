@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [
     { name = "Karl Vaartnou", email = "karl@vaartnou.eu" }
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = []
 
 [project.scripts]
@@ -27,7 +27,7 @@ dev = [
 ]
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py314"
 line-length = 100
 
 [tool.ruff.lint]
@@ -35,7 +35,7 @@ select = ["E", "F", "I", "UP", "B", "ASYNC", "RUF"]
 
 [tool.pyright]
 typeCheckingMode = "strict"
-pythonVersion = "3.12"
+pythonVersion = "3.14"
 include = ["src", "tests"]
 venvPath = "."
 venv = ".venv"
