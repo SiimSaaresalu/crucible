@@ -1,6 +1,6 @@
 # Harbor runs
 
-Runs of the generated `incident@1` tasks (`nightshift export harbor --seeds 0-9`) on a laptop with local Docker. Harbor 0.26.0, OpenCode 1.19.5. The job folders are in `jobs/` (gitignored); this file keeps the scores.
+Runs of the generated `incident@1` tasks (`crucible export harbor --task incident@1 --seeds 0-9`) on a laptop with local Docker. Harbor 0.26.0, OpenCode 1.19.5. The job folders are in `jobs/` (gitignored); this file keeps the scores.
 
 Date: 2026-11-14. Engine commit: `44f0dca` plus the step 7 export.
 
@@ -12,7 +12,7 @@ Date: 2026-11-14. Engine commit: `44f0dca` plus the step 7 export.
 | opencode | `google/gemini-3.8-flash` | `incident-1-opencode-gemini` | 3 | 0.955 | 3/3 |
 | nop | none | `incident-1-nop` | 3 | 0.000 | 0/3 |
 
-The oracle reward is equal to the in-process reference score (`nightshift eval --task incident@1 --policy reference --seeds 0-9`) on each seed, to all printed digits.
+The oracle reward is equal to the in-process reference score (`crucible eval --task incident@1 --policy reference --seeds 0-9`) on each seed, to all printed digits. This held before exports were salted; since the per-task `SIDECAR_SALT`, a Harbor world differs from the in-process world of the same seed.
 
 ## Per trial
 

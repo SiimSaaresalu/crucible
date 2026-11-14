@@ -201,8 +201,8 @@ async def _play(
 
 @app.command("play")
 def play_command(
+    task: Annotated[str, typer.Option("--task", help="Task ref, e.g. incident@1.")],
     policy: Annotated[str, typer.Option(help="Policy name.")] = "reference",
-    task: Annotated[str, typer.Option(help="Task ref, e.g. incident@1.")] = "incident@1",
     mcp: Annotated[str | None, typer.Option(help="MCP URL of a sidecar, e.g. .../mcp.")] = None,
     api: Annotated[str | None, typer.Option(help="Base URL of an API server.")] = None,
     seed: Annotated[int | None, typer.Option(help="Seed (required with --api).")] = None,
@@ -235,8 +235,8 @@ app.add_typer(export_app, name="export")
 
 @export_app.command("harbor")
 def export_harbor_command(
+    task: Annotated[str, typer.Option("--task", help="Task ref, e.g. incident@1.")],
     out: Annotated[Path, typer.Option(help="Output folder (a Harbor dataset folder).")],
-    task: Annotated[str, typer.Option("--task", help="Task ref, e.g. incident@1.")] = "incident@1",
     seeds: Annotated[str, typer.Option(help="Seeds, e.g. '0-9,12'.")] = "0-9",
     solution_policy: Annotated[
         str, typer.Option(help="Policy that solution/solve.sh plays (the oracle).")
@@ -286,6 +286,30 @@ def export_harbor_command(
     for folder in folders:
         typer.echo(folder)
     typer.echo(f"Run: harbor run -p {out} -a oracle")
+
+
+@app.command("new-env")
+def new_env_command(
+    name: Annotated[str, typer.Argument(help="Task id of the new environment, e.g. 'triage'.")],
+    root: Annotated[
+        Path | None, typer.Option(help="Engine folder to write into (default: this checkout).")
+    ] = None,
+) -> None:
+    """Start a new environment as a copy of guess@1, with a reference policy and tests."""
+    from crucible.scaffold import ScaffoldError, engine_root, new_env
+
+    try:
+        written = new_env(name, root if root is not None else engine_root())
+    except (ScaffoldError, OSError) as exc:
+        _fail(str(exc))
+    for path in written:
+        typer.echo(path)
+    typer.echo(
+        f"Registered {name}@1. Check it: uv run pytest tests/generic src/crucible/envs/{name}"
+    )
+    typer.echo(
+        "Pin its scores: CRUCIBLE_UPDATE_GOLDEN=1 uv run pytest tests/policies/test_golden.py"
+    )
 
 
 @app.command("serve")

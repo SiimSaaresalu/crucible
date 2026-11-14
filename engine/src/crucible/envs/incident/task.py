@@ -6,13 +6,13 @@ world itself. A call that fails validation changes nothing: not the clock, not `
 """
 
 from collections.abc import Sequence
-from typing import ClassVar
+from typing import ClassVar, get_args
 
 from pydantic import BaseModel, ConfigDict, Field, JsonValue
 
 from crucible.core.registry import register_task
 from crucible.core.scoring import Score
-from crucible.core.task import Task, TaskSpec
+from crucible.core.task import Task, TaskChecks, TaskSpec
 from crucible.core.tools import (
     Observation,
     ToolCall,
@@ -209,18 +209,30 @@ class IncidentTask(Task):
         keywords=("incident-response",),
     )
     scoring_hash: ClassVar[str] = SCORING_HASH
+    checks: ClassVar[TaskChecks] = TaskChecks(exploit_policies=("stop_early", "shotgun"))
 
     def __init__(self) -> None:
         self._world: World | None = None
         self._state = EpisodeState()
 
-    async def reset(self, seed: int, difficulty: int = 0) -> Observation:
-        self._world = make_world(seed)
+    async def reset(
+        self, seed: int, difficulty: int = 0, *, salt: str | None = None
+    ) -> Observation:
+        self._world = make_world(seed, salt)
         self._state = EpisodeState()
         return Observation(text=self.instruction(), data={"minute": 0})
 
     def tools(self) -> list[ToolSpec]:
         return list(_TOOLS)
+
+    def hidden_strings(self) -> frozenset[str]:
+        """Root-cause names and world field names: tools never say them unless the agent did."""
+        return frozenset({*get_args(RootCause), "fault_kind", "fault_start", "herring", "is_bad"})
+
+    def solved(self, score: Score) -> bool:
+        return score.flags.get("probes_healthy", False) and score.flags.get(
+            "root_cause_correct", False
+        )
 
     def done(self) -> bool:
         return self._state.resolved is not None or self._state.minute >= HORIZON

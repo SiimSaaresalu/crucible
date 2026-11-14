@@ -257,9 +257,9 @@ def _deploy_id(rng: RngStreams, used: set[str]) -> str:
             return candidate
 
 
-def make_world(seed: int) -> World:
-    """Build the world for `seed`. Draw order is fixed; a test pins it."""
-    rng = RngStreams(seed)
+def make_world(seed: int, salt: str | None = None) -> World:
+    """Build the world for `seed` (and `salt`). Draw order is fixed; a test pins it."""
+    rng = RngStreams(seed, salt)
     ex = rng.exogenous
 
     fault_kind = ex.choice(FAULT_KINDS)

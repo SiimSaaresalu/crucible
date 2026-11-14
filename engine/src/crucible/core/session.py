@@ -10,9 +10,12 @@ from crucible.core.transcript import StopReason, TranscriptWriter
 class EpisodeSession:
     """Owns the step counter, the budget, the transcript and the final grade of one episode."""
 
-    def __init__(self, task: Task, seed: int, writer: TranscriptWriter) -> None:
+    def __init__(
+        self, task: Task, seed: int, writer: TranscriptWriter, *, salt: str | None = None
+    ) -> None:
         self._task = task
         self._seed = seed
+        self._salt = salt
         self._writer = writer
         self._steps_used = 0
         self._outcome: tuple[StopReason, Score] | None = None
@@ -42,8 +45,9 @@ class EpisodeSession:
             seed=self._seed,
             repeat=job.repeat,
             job_id=job.job_id,
+            salted=self._salt is not None,
         )
-        return await self._task.reset(self._seed)
+        return await self._task.reset(self._seed, salt=self._salt)
 
     async def step(self, call: ToolCall) -> ToolResult:
         """Run one call. Refusals for a closed, over or out-of-budget episode are not counted."""

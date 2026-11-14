@@ -20,6 +20,11 @@ class TaskSpec(BaseModel):
     title: str = Field(min_length=1, pattern=r"^[^\r\n]+$")
     description: str = Field(min_length=1)
     keywords: tuple[str, ...] = ()
+    # Harbor resources. `None` keeps the export's defaults.
+    cpus: int | None = Field(default=None, gt=0)
+    memory_mb: int | None = Field(default=None, gt=0)
+    timeout_sec: float | None = Field(default=None, gt=0)
+    docker_image: str | None = Field(default=None, min_length=1, pattern=r"^[^\s\"\\]+$")
 
     @field_validator("keywords")
     @classmethod
@@ -34,15 +39,37 @@ class TaskSpec(BaseModel):
         return f"{self.id}@{self.version}"
 
 
+class TaskChecks(BaseModel):
+    """Which generic checks (`tests/generic/`) run for a task, and how.
+
+    Every check is on by default; turn one off only when it cannot apply to the task.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    seeds: tuple[int, ...] = tuple(range(20))
+    exploit_policies: tuple[str, ...] = ()
+    determinism: bool = True
+    do_nothing_zero: bool = True
+    reward_bounds: bool = True
+    no_hidden_state: bool = True
+    reference_solves: bool = True
+    exploits_below_reference: bool = True
+    oracle_perfect: bool = True
+
+
 class Task(ABC):
     """One environment. A fresh instance is made per episode."""
 
     spec: ClassVar[TaskSpec]
     scoring_hash: ClassVar[str] = "none"
+    checks: ClassVar[TaskChecks] = TaskChecks()
 
     @abstractmethod
-    async def reset(self, seed: int, difficulty: int = 0) -> Observation:
-        """Start an episode and return the first observation."""
+    async def reset(
+        self, seed: int, difficulty: int = 0, *, salt: str | None = None
+    ) -> Observation:
+        """Start an episode and return the first observation. `salt` mixes into the world RNG."""
 
     @abstractmethod
     def tools(self) -> list[ToolSpec]:
@@ -64,5 +91,16 @@ class Task(ABC):
     def instruction(self) -> str:
         """Instruction text shown to the policy."""
 
+    def hidden_strings(self) -> frozenset[str]:
+        """Words from the hidden state that no successful tool result may contain. After reset.
 
-__all__ = ["Task", "TaskSpec"]
+        The generic no-hidden-state check matches them as whole words.
+        """
+        return frozenset()
+
+    def solved(self, score: Score) -> bool:
+        """True when a finished episode counts as solved. Override for a stricter rule."""
+        return score.total > 0
+
+
+__all__ = ["Task", "TaskChecks", "TaskSpec"]

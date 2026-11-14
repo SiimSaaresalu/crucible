@@ -34,6 +34,9 @@ UV_VERSION = "0.12.18"
 _PLACEHOLDER = re.compile(r"@@([A-Z_]+)@@")
 _EXECUTABLE = {"solution/solve.sh", "tests/test.sh"}
 _EXPORT_KEYWORDS = ("crucible", "mcp", "interactive")
+DEFAULT_CPUS = 1
+DEFAULT_MEMORY_MB = 2048
+DEFAULT_AGENT_TIMEOUT_SEC = 900.0
 
 
 class ExportError(Exception):
@@ -131,6 +134,17 @@ def _keywords(spec: TaskSpec) -> list[str]:
     return list(dict.fromkeys((*_EXPORT_KEYWORDS, *spec.keywords)))
 
 
+def _resources(spec: TaskSpec) -> dict[str, str]:
+    """`task.toml` values for the task's resources; a field left `None` keeps the default."""
+    image = spec.docker_image
+    return {
+        "CPUS": str(spec.cpus or DEFAULT_CPUS),
+        "MEMORY_MB": str(spec.memory_mb or DEFAULT_MEMORY_MB),
+        "AGENT_TIMEOUT_SEC": repr(float(spec.timeout_sec or DEFAULT_AGENT_TIMEOUT_SEC)),
+        "DOCKER_IMAGE_LINE": f"docker_image = {_toml_str(image)}\n" if image else "",
+    }
+
+
 def _git_commit() -> str:
     try:
         done = subprocess.run(
@@ -164,12 +178,15 @@ def export_harbor(
     solution_policy: str = "reference",
     force: bool = False,
     token_factory: Callable[[], str] = lambda: secrets.token_hex(16),
+    salt_factory: Callable[[], str] = lambda: secrets.token_hex(16),
     git_commit: str | None = None,
 ) -> list[Path]:
     """Write one Harbor task folder per seed under `out`, plus `manifest.json`.
 
     Raise `ExportError` if `out` is not empty and `force` is false. Every task gets its own
     grade token; the token is written only to `[verifier.env]` and the sidecar's environment.
+    Every task also gets its own world salt, written only to the sidecar's environment, so the
+    world cannot be rebuilt from the seed in the folder name.
     """
     if not seeds:
         raise ExportError("no seeds given")
@@ -196,9 +213,11 @@ def export_harbor(
             "TITLE": spec.title,
             "DESCRIPTION": _toml_str(f"{spec.description.strip()} ({ref}, seed {seed})"),
             "KEYWORDS": keywords,
+            **_resources(spec),
             "ENGINE_VERSION": engine_version,
             "GIT_COMMIT": commit,
             "GRADE_TOKEN": token_factory(),
+            "SIDECAR_SALT": salt_factory(),
             "SOLUTION_POLICY": solution_policy,
             "INSTRUCTION": instruction,
             "WHEEL_NAME": artifacts.wheel.name,

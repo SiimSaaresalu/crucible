@@ -23,7 +23,9 @@ from crucible.policies.baselines import DoNothing
 
 
 class _Base(Task):
-    async def reset(self, seed: int, difficulty: int = 0) -> Observation:
+    async def reset(
+        self, seed: int, difficulty: int = 0, *, salt: str | None = None
+    ) -> Observation:
         return Observation()
 
     def tools(self) -> list[ToolSpec]:

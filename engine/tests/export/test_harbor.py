@@ -5,6 +5,7 @@ import json
 import tomllib
 from pathlib import Path
 
+import click
 import pytest
 import yaml
 from typer.testing import CliRunner
@@ -12,6 +13,7 @@ from typer.testing import CliRunner
 from crucible.cli import app
 from crucible.core import registry
 from crucible.core.registry import get_task, register_task
+from crucible.core.task import TaskSpec
 from crucible.envs.guess.task import GuessNumber
 from crucible.export.harbor import (
     EngineArtifacts,
@@ -167,6 +169,68 @@ def test_metadata_is_escaped_for_toml(tmp_path: Path, artifacts: EngineArtifacts
     assert (folder / "instruction.md").read_text().startswith('# A "quoted" title\n')
 
 
+def test_default_resources(tmp_path: Path, artifacts: EngineArtifacts) -> None:
+    (folder,) = _export(tmp_path / "out", artifacts, [0])
+    config = tomllib.loads((folder / "task.toml").read_text())
+    assert config["agent"]["timeout_sec"] == 900.0
+    environment = config["environment"]
+    assert (environment["cpus"], environment["memory_mb"]) == (1, 2048)
+    assert "docker_image" not in environment
+
+
+def test_task_resources_go_into_task_toml(tmp_path: Path, artifacts: EngineArtifacts) -> None:
+    class Big(GuessNumber):
+        spec = GuessNumber.spec.model_copy(
+            update={
+                "id": "big",
+                "cpus": 4,
+                "memory_mb": 8192,
+                "timeout_sec": 1800,
+                "docker_image": "ghcr.io/example/agent:1.2",
+            }
+        )
+
+    with registry._reset_for_tests():  # pyright: ignore[reportPrivateUsage]
+        register_task(Big)
+        (folder,) = _export(tmp_path / "out", artifacts, [0], "big@1")
+    config = tomllib.loads((folder / "task.toml").read_text())
+    assert config["agent"]["timeout_sec"] == 1800.0
+    environment = config["environment"]
+    assert environment["cpus"] == 4
+    assert environment["memory_mb"] == 8192
+    assert environment["docker_image"] == "ghcr.io/example/agent:1.2"
+    assert environment["build_timeout_sec"] == 900.0
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [{"cpus": 0}, {"memory_mb": -1}, {"timeout_sec": 0}, {"docker_image": 'a "b"'}],
+)
+def test_bad_resources_are_rejected(bad: dict[str, object]) -> None:
+    fields = GuessNumber.spec.model_dump()
+    with pytest.raises(ValueError):
+        TaskSpec.model_validate({**fields, **bad})
+
+
+def _salt(folder: Path) -> str:
+    compose = yaml.safe_load((folder / "environment/docker-compose.yaml").read_text())
+    return compose["services"]["mcp-server"]["environment"]["SIDECAR_SALT"]
+
+
+def test_salt_is_fresh_and_only_in_the_sidecar_env(
+    tmp_path: Path, artifacts: EngineArtifacts
+) -> None:
+    folders = _export(tmp_path / "out", artifacts, [0, 1, 2])
+    salts = [_salt(f) for f in folders]
+    assert all(len(s) == 32 and int(s, 16) >= 0 for s in salts)
+    assert len(set(salts)) == 3
+    manifest = (tmp_path / "out" / "manifest.json").read_text()
+    for folder, salt in zip(folders, salts, strict=True):
+        holders = {f for f in FILES if not f.endswith(".whl") and salt in (folder / f).read_text()}
+        assert holders == {"environment/docker-compose.yaml"}
+        assert salt not in manifest
+
+
 def test_tokens_stay_with_sidecar_and_verifier(tmp_path: Path, artifacts: EngineArtifacts) -> None:
     folders = _export(tmp_path / "out", artifacts, [0, 1, 2])
     tokens = [_token(f) for f in folders]
@@ -219,7 +283,7 @@ def test_bad_seeds(tmp_path: Path, artifacts: EngineArtifacts, seeds: list[int])
 
 def test_cli(tmp_path: Path, artifacts: EngineArtifacts) -> None:
     out = tmp_path / "out"
-    args = ["export", "harbor", "--out", str(out), "--seeds", "0-2"]
+    args = ["export", "harbor", "--task", "incident@1", "--out", str(out), "--seeds", "0-2"]
     prebuilt = ["--wheel", str(artifacts.wheel), "--requirements", str(artifacts.requirements)]
     result = CliRunner().invoke(app, [*args, *prebuilt])
     assert result.exit_code == 0, result.output
@@ -235,3 +299,8 @@ def test_cli(tmp_path: Path, artifacts: EngineArtifacts) -> None:
 
     unknown = CliRunner().invoke(app, [*args, *prebuilt, "--force", "--solution-policy", "nope"])
     assert unknown.exit_code == 2
+
+    no_task = [a for a in args if a not in ("--task", "incident@1")]
+    missing = CliRunner().invoke(app, [*no_task, *prebuilt, "--force"])
+    assert missing.exit_code == 2
+    assert "Missing option '--task'" in click.unstyle(missing.output)
