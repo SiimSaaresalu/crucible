@@ -9,3 +9,4 @@ runs/
 
 # Local build-step plans for agents; never commit them
 /build*.md
+dist/
