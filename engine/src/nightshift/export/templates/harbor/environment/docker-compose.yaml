@@ -1,0 +1,24 @@
+# Merged on top of Harbor's base docker-compose config. Harbor configures `main`.
+services:
+  main:
+    depends_on:
+      mcp-server:
+        condition: service_healthy
+
+  mcp-server:
+    build:
+      context: ./mcp-server
+    environment:
+      MODE: "sidecar"
+      SIDECAR_TASK: "@@TASK_REF@@"
+      SIDECAR_SEED: "@@SEED@@"
+      GRADE_TOKEN: "@@GRADE_TOKEN@@"
+      RUNS_DIR: "/tmp/runs"
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz', timeout=2)"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+      start_period: 5s

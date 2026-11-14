@@ -1,0 +1,184 @@
+"""Harbor export: folder layout, config files and where the secrets go. No Docker."""
+
+import itertools
+import json
+import tomllib
+from pathlib import Path
+
+import pytest
+import yaml
+from typer.testing import CliRunner
+
+from nightshift.cli import app
+from nightshift.core.registry import get_task
+from nightshift.export.harbor import (
+    EngineArtifacts,
+    ExportError,
+    export_harbor,
+    task_folder_name,
+)
+
+WHEEL = "nightshift-0.1.0-py3-none-any.whl"
+FILES = {
+    "task.toml",
+    "instruction.md",
+    "environment/Dockerfile",
+    "environment/docker-compose.yaml",
+    "environment/mcp-server/Dockerfile",
+    f"environment/mcp-server/{WHEEL}",
+    "environment/mcp-server/requirements.txt",
+    "solution/solve.sh",
+    f"solution/{WHEEL}",
+    "solution/requirements.txt",
+    "tests/test.sh",
+}
+
+
+@pytest.fixture
+def artifacts(tmp_path: Path) -> EngineArtifacts:
+    wheel = tmp_path / "build" / WHEEL
+    wheel.parent.mkdir()
+    wheel.write_bytes(b"fake wheel")
+    requirements = tmp_path / "build" / "requirements.txt"
+    requirements.write_text("pydantic==2.14.3\n")
+    return EngineArtifacts(wheel=wheel, requirements=requirements)
+
+
+def _tokens() -> itertools.count[int]:
+    return itertools.count()
+
+
+def _export(out: Path, artifacts: EngineArtifacts, seeds: list[int], **kw: object) -> list[Path]:
+    counter = _tokens()
+    return export_harbor(
+        "incident@1",
+        seeds,
+        out,
+        artifacts,
+        token_factory=lambda: f"token-{next(counter):04d}-secret",
+        git_commit="abc123",
+        **kw,  # pyright: ignore[reportArgumentType]
+    )
+
+
+def _files(folder: Path) -> set[str]:
+    return {p.relative_to(folder).as_posix() for p in folder.rglob("*") if p.is_file()}
+
+
+def _token(folder: Path) -> str:
+    config = tomllib.loads((folder / "task.toml").read_text())
+    return config["verifier"]["env"]["GRADE_TOKEN"]
+
+
+def test_layout(tmp_path: Path, artifacts: EngineArtifacts) -> None:
+    folders = _export(tmp_path / "out", artifacts, [0, 1, 7])
+    assert [f.name for f in folders] == [task_folder_name("incident@1", s) for s in (0, 1, 7)]
+    assert {p.name for p in (tmp_path / "out").iterdir()} == {
+        "incident-1-seed-0",
+        "incident-1-seed-1",
+        "incident-1-seed-7",
+        "manifest.json",
+    }
+    for folder in folders:
+        assert _files(folder) == FILES
+        for script in ("solution/solve.sh", "tests/test.sh"):
+            assert (folder / script).stat().st_mode & 0o111
+        assert "@@" not in "".join(
+            (folder / f).read_text() for f in FILES if not f.endswith(".whl")
+        )
+
+
+def test_task_toml_and_compose(tmp_path: Path, artifacts: EngineArtifacts) -> None:
+    (folder,) = _export(tmp_path / "out", artifacts, [5])
+    config = tomllib.loads((folder / "task.toml").read_text())
+    assert config["task"]["name"] == "nightshift/incident-1-seed-5"
+    assert config["metadata"] == {
+        "task_ref": "incident@1",
+        "seed": 5,
+        "engine_version": "0.1.0",
+        "git_commit": "abc123",
+        "generator": "nightshift export harbor",
+    }
+    (server,) = config["environment"]["mcp_servers"]
+    assert server["url"] == "http://mcp-server:8000/mcp"
+    assert config["environment"]["env"] == {}
+    assert config["solution"]["env"] == {"NIGHTSHIFT_POLICY": "reference"}
+
+    compose = yaml.safe_load((folder / "environment/docker-compose.yaml").read_text())
+    assert server["name"] in compose["services"]
+    env = compose["services"]["mcp-server"]["environment"]
+    assert env["MODE"] == "sidecar"
+    assert env["SIDECAR_TASK"] == "incident@1"
+    assert env["SIDECAR_SEED"] == "5"
+    assert env["GRADE_TOKEN"] == _token(folder)
+    assert "environment" not in compose["services"]["main"]
+
+
+def test_tokens_stay_with_sidecar_and_verifier(tmp_path: Path, artifacts: EngineArtifacts) -> None:
+    folders = _export(tmp_path / "out", artifacts, [0, 1, 2])
+    tokens = [_token(f) for f in folders]
+    assert len(set(tokens)) == 3
+    manifest = (tmp_path / "out" / "manifest.json").read_text()
+    for folder, token in zip(folders, tokens, strict=True):
+        holders = {f for f in FILES if not f.endswith(".whl") and token in (folder / f).read_text()}
+        assert holders == {"task.toml", "environment/docker-compose.yaml"}
+        assert token not in manifest
+
+
+def test_agent_side_has_no_engine_or_secrets(tmp_path: Path, artifacts: EngineArtifacts) -> None:
+    (folder,) = _export(tmp_path / "out", artifacts, [3])
+    instruction = (folder / "instruction.md").read_text()
+    assert get_task("incident@1").instruction().strip() in instruction
+    for leak in ("/grade", "GRADE_TOKEN", "seed", "SIDECAR"):
+        assert leak not in instruction
+    main = (folder / "environment/Dockerfile").read_text()
+    assert "nightshift" not in main.lower().replace("night shift", "")
+    assert ".whl" not in main
+
+
+def test_manifest(tmp_path: Path, artifacts: EngineArtifacts) -> None:
+    _export(tmp_path / "out", artifacts, [2, 0], solution_policy="stop_early")
+    manifest = json.loads((tmp_path / "out" / "manifest.json").read_text())
+    assert manifest["seeds"] == [2, 0]
+    assert manifest["solution_policy"] == "stop_early"
+    assert manifest["wheel"] == WHEEL
+    assert len(manifest["wheel_sha256"]) == 64
+    folder = tmp_path / "out" / "incident-1-seed-2"
+    config = tomllib.loads((folder / "task.toml").read_text())
+    assert config["solution"]["env"]["NIGHTSHIFT_POLICY"] == "stop_early"
+
+
+def test_non_empty_out_needs_force(tmp_path: Path, artifacts: EngineArtifacts) -> None:
+    out = tmp_path / "out"
+    _export(out, artifacts, [0, 1])
+    with pytest.raises(ExportError, match="not empty"):
+        _export(out, artifacts, [0])
+    _export(out, artifacts, [4], force=True)
+    assert {p.name for p in out.iterdir()} == {"incident-1-seed-4", "manifest.json"}
+
+
+@pytest.mark.parametrize("seeds", [[], [1, 1]])
+def test_bad_seeds(tmp_path: Path, artifacts: EngineArtifacts, seeds: list[int]) -> None:
+    with pytest.raises(ExportError):
+        _export(tmp_path / "out", artifacts, seeds)
+    assert not (tmp_path / "out").exists()
+
+
+def test_cli(tmp_path: Path, artifacts: EngineArtifacts) -> None:
+    out = tmp_path / "out"
+    args = ["export", "harbor", "--out", str(out), "--seeds", "0-2"]
+    prebuilt = ["--wheel", str(artifacts.wheel), "--requirements", str(artifacts.requirements)]
+    result = CliRunner().invoke(app, [*args, *prebuilt])
+    assert result.exit_code == 0, result.output
+    assert "harbor run -p" in result.output
+    assert len(list(out.glob("incident-1-seed-*"))) == 3
+
+    again = CliRunner().invoke(app, [*args, *prebuilt])
+    assert again.exit_code == 2
+    assert "--force" in again.output
+
+    half = CliRunner().invoke(app, [*args, "--wheel", str(artifacts.wheel), "--force"])
+    assert half.exit_code == 2
+
+    unknown = CliRunner().invoke(app, [*args, *prebuilt, "--force", "--solution-policy", "nope"])
+    assert unknown.exit_code == 2

@@ -10,3 +10,6 @@ runs/
 # Local build-step plans for agents; never commit them
 /build*.md
 dist/
+
+# Generated Harbor task folders (they hold grade tokens); regenerate with `nightshift export harbor`
+/harbor/

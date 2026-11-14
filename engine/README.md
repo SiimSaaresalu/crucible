@@ -52,4 +52,20 @@ docker run -p 8000:8000 -e MODE=sidecar -e GRADE_TOKEN=secret nightshift-engine
 scripts/docker_smoke.sh   # build, one full /v1 episode, sidecar token check
 ```
 
+## Harbor export
+
+`nightshift export harbor` writes one Harbor task folder per seed. It builds the engine wheel
+and vendors it into each task's sidecar and `solution/`; the agent's container gets no engine.
+
+```sh
+uv run nightshift export harbor --task incident@1 --seeds 0-9 --out ../harbor/incident-1
+uv run nightshift export harbor ... --solution-policy stop_early   # oracle plays stop_early
+uv run nightshift export harbor ... --force                        # replace a non-empty --out
+```
+
+Each task gets a new grade token on every export. The token is only in `[verifier.env]` and the
+sidecar's environment, so do not commit the output (`harbor/` is gitignored). The verifier
+writes `reward.txt`, `grade.json` (breakdown, flags, steps, stop reason) and `transcript.json`
+to `/logs/verifier/`.
+
 Tests: see [tests/README.md](tests/README.md).
