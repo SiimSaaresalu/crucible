@@ -43,7 +43,7 @@ class _Base(Task):
 
 def _make_task(task_id: str, version: int) -> type[Task]:
     class T(_Base):
-        spec = TaskSpec(id=task_id, version=version, max_steps=1)
+        spec = TaskSpec(id=task_id, version=version, max_steps=1, title="t", description="d")
 
     return T
 

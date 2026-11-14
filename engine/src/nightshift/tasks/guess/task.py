@@ -58,7 +58,17 @@ class _Hidden:
 class GuessNumber(Task):
     """Guess a hidden number; fewer guesses score higher."""
 
-    spec: ClassVar[TaskSpec] = TaskSpec(id="guess", version=1, max_steps=10)
+    spec: ClassVar[TaskSpec] = TaskSpec(
+        id="guess",
+        version=1,
+        max_steps=10,
+        title="Guess the number",
+        description=(
+            "Find a hidden whole number from 1 to 100 with higher/lower feedback. "
+            "Fewer guesses score higher."
+        ),
+        keywords=("number-guessing", "search"),
+    )
 
     def __init__(self) -> None:
         self._hidden: _Hidden | None = None
