@@ -14,7 +14,7 @@ git_commit = "@@GIT_COMMIT@@"
 generator = "nightshift export harbor"
 
 [agent]
-timeout_sec = 900.0
+timeout_sec = @@AGENT_TIMEOUT_SEC@@
 
 [verifier]
 timeout_sec = 120.0
@@ -24,8 +24,8 @@ GRADE_TOKEN = "@@GRADE_TOKEN@@"
 
 [environment]
 build_timeout_sec = 900.0
-cpus = 1
-memory_mb = 2048
+@@DOCKER_IMAGE_LINE@@cpus = @@CPUS@@
+memory_mb = @@MEMORY_MB@@
 storage_mb = 10240
 gpus = 0
 

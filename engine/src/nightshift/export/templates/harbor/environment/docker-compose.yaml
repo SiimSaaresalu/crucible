@@ -12,6 +12,7 @@ services:
       MODE: "sidecar"
       SIDECAR_TASK: "@@TASK_REF@@"
       SIDECAR_SEED: "@@SEED@@"
+      SIDECAR_SALT: "@@SIDECAR_SALT@@"
       GRADE_TOKEN: "@@GRADE_TOKEN@@"
       RUNS_DIR: "/tmp/runs"
     expose:

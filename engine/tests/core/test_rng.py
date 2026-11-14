@@ -35,3 +35,22 @@ def test_actions_do_not_change_exogenous() -> None:
     for _ in range(100):
         busy.actions.random()
     assert [busy.exogenous.random() for _ in range(5)] == expected
+
+
+def _draws(rng: RngStreams) -> list[int]:
+    return [rng.exogenous.randint(1, 1000) for _ in range(3)]
+
+
+def test_no_salt_keeps_the_pinned_values() -> None:
+    assert _draws(RngStreams(0, None)) == EXO
+
+
+def test_same_seed_and_salt_same_values() -> None:
+    assert _draws(RngStreams(7, "abc")) == _draws(RngStreams(7, "abc"))
+
+
+def test_salt_changes_every_stream() -> None:
+    plain, salted = RngStreams(0), RngStreams(0, "abc")
+    assert _draws(salted) != _draws(plain)
+    assert salted.actions.random() != plain.actions.random()
+    assert _draws(RngStreams(0, "abc")) != _draws(RngStreams(0, "abd"))

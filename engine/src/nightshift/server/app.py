@@ -143,7 +143,7 @@ def _add_sidecar_routes(app: FastAPI, settings: Settings, logger: logging.Logger
     task = _lookup(settings.sidecar_task)
     seed = settings.sidecar_seed
     path = settings.runs_dir / "episodes" / f"sidecar-{task.spec.ref}-{seed}.jsonl"
-    session = EpisodeSession(task, seed, TranscriptWriter(path))
+    session = EpisodeSession(task, seed, TranscriptWriter(path), salt=settings.sidecar_salt)
     lock = asyncio.Lock()
     manager = StreamableHTTPSessionManager(
         build_mcp_server(session, lock), json_response=True, stateless=True
