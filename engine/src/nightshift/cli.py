@@ -184,4 +184,18 @@ def eval_command(
         raise typer.Exit(1)
 
 
+@app.command("serve")
+def serve_command() -> None:
+    """Serve the HTTP API (settings come from the environment)."""
+    import uvicorn
+
+    from nightshift.server.app import create_app
+    from nightshift.server.settings import Settings
+
+    settings = Settings()
+    uvicorn.run(
+        create_app(settings), host="0.0.0.0", port=settings.port, log_level=settings.log_level
+    )
+
+
 __all__ = ["Row", "app", "summarise"]

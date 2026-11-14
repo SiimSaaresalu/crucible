@@ -1,6 +1,5 @@
 """The one episode loop."""
 
-import json
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict
@@ -10,7 +9,7 @@ from nightshift.core.policy import Policy
 from nightshift.core.scoring import Score
 from nightshift.core.session import EpisodeSession
 from nightshift.core.task import Task
-from nightshift.core.tools import Observation, ToolResult
+from nightshift.core.tools import Observation, result_text
 from nightshift.core.transcript import StopReason, TranscriptWriter
 
 
@@ -34,15 +33,6 @@ class EpisodeResult(BaseModel):
     retried: int = 0
 
 
-def _result_text(result: ToolResult) -> str:
-    """Text form of a tool result for `Observation.text`."""
-    if not result.ok:
-        return f"Error: {result.error}"
-    if isinstance(result.content, str):
-        return result.content
-    return json.dumps(result.content, sort_keys=True)
-
-
 async def _play(session: EpisodeSession, policy: Policy, job: Job) -> None:
     task = session.task
     obs = await session.start(policy_name=policy.name, job=job)
@@ -54,7 +44,7 @@ async def _play(session: EpisodeSession, policy: Policy, job: Job) -> None:
         if call is None:
             break
         result = await session.step(call)
-        obs = Observation(text=_result_text(result), last_result=result)
+        obs = Observation(text=result_text(result), last_result=result)
 
 
 async def run_episode(
