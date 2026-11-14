@@ -39,7 +39,7 @@ MODE=sidecar GRADE_TOKEN=secret uv run nightshift serve            # sidecar mod
 
 # Play a policy against a running server; prints one JSON line.
 uv run nightshift play --api http://localhost:8000 --task incident@1 --seed 0 --policy reference
-uv run nightshift play --mcp http://localhost:8000/mcp --policy reference   # sidecar
+uv run nightshift play --mcp http://localhost:8000/mcp --task incident@1 --policy reference   # sidecar
 curl -H 'x-grade-token: secret' http://localhost:8000/grade
 ```
 

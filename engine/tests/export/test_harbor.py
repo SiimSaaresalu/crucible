@@ -5,6 +5,7 @@ import json
 import tomllib
 from pathlib import Path
 
+import click
 import pytest
 import yaml
 from typer.testing import CliRunner
@@ -219,7 +220,7 @@ def test_bad_seeds(tmp_path: Path, artifacts: EngineArtifacts, seeds: list[int])
 
 def test_cli(tmp_path: Path, artifacts: EngineArtifacts) -> None:
     out = tmp_path / "out"
-    args = ["export", "harbor", "--out", str(out), "--seeds", "0-2"]
+    args = ["export", "harbor", "--task", "incident@1", "--out", str(out), "--seeds", "0-2"]
     prebuilt = ["--wheel", str(artifacts.wheel), "--requirements", str(artifacts.requirements)]
     result = CliRunner().invoke(app, [*args, *prebuilt])
     assert result.exit_code == 0, result.output
@@ -235,3 +236,8 @@ def test_cli(tmp_path: Path, artifacts: EngineArtifacts) -> None:
 
     unknown = CliRunner().invoke(app, [*args, *prebuilt, "--force", "--solution-policy", "nope"])
     assert unknown.exit_code == 2
+
+    no_task = [a for a in args if a not in ("--task", "incident@1")]
+    missing = CliRunner().invoke(app, [*no_task, *prebuilt, "--force"])
+    assert missing.exit_code == 2
+    assert "Missing option '--task'" in click.unstyle(missing.output)
