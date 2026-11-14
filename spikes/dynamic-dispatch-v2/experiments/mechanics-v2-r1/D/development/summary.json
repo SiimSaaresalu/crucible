@@ -1,0 +1,1025 @@
+{
+  "accepted": true,
+  "base_git_commit": "a434cb76114149b081968bf110a4a2ff5aadc812",
+  "candidate": "mechanics-v2-r1",
+  "confidence_interval": "normal approximation: mean +/- 1.96 * sample_stddev / sqrt(n)",
+  "error_handling": "All worlds retained. Failed rewards are zero; missing economic metrics have explicit n. Any episode error invalidates acceptance.",
+  "errors": 0,
+  "full_split": true,
+  "ortools": "9.15.6755",
+  "paired_reference_minus_baseline": {
+    "deadline_first": {
+      "losses": 0,
+      "reward_difference": {
+        "ci95_high": 0.31466657766992223,
+        "ci95_low": 0.1848780221099239,
+        "mean": 0.24977229988992308,
+        "n": 20,
+        "stddev": 0.14806940455799214
+      },
+      "ties": 0,
+      "utility_difference": {
+        "ci95_high": 1693.0443351860458,
+        "ci95_low": 986.488444280725,
+        "mean": 1339.7663897333855,
+        "n": 20,
+        "stddev": 806.0750010036853
+      },
+      "wins": 20,
+      "worlds": 20,
+      "worlds_with_errors": 0
+    },
+    "do_nothing": {
+      "losses": 0,
+      "reward_difference": {
+        "ci95_high": 0.9170863950524837,
+        "ci95_low": 0.8572585052214616,
+        "mean": 0.8871724501369727,
+        "n": 20,
+        "stddev": 0.06825470847578238
+      },
+      "ties": 0,
+      "utility_difference": {
+        "ci95_high": 5096.178623689931,
+        "ci95_low": 4493.698042578158,
+        "mean": 4794.938333134044,
+        "n": 20,
+        "stddev": 687.3405788211745
+      },
+      "wins": 20,
+      "worlds": 20,
+      "worlds_with_errors": 0
+    },
+    "greedy_insertion": {
+      "losses": 8,
+      "reward_difference": {
+        "ci95_high": 0.03941036501937924,
+        "ci95_low": 0.0001498748395054421,
+        "mean": 0.01978011992944234,
+        "n": 20,
+        "stddev": 0.044790369832735086
+      },
+      "ties": 0,
+      "utility_difference": {
+        "ci95_high": 218.8718766282119,
+        "ci95_low": -4.342517893909715,
+        "mean": 107.2646793671511,
+        "n": 20,
+        "stddev": 254.65436719791873
+      },
+      "wins": 12,
+      "worlds": 20,
+      "worlds_with_errors": 0
+    },
+    "nearest_first": {
+      "losses": 0,
+      "reward_difference": {
+        "ci95_high": 0.17607503891790943,
+        "ci95_low": 0.08611868013547631,
+        "mean": 0.13109685952669287,
+        "n": 20,
+        "stddev": 0.10262680267646972
+      },
+      "ties": 0,
+      "utility_difference": {
+        "ci95_high": 949.0317874247339,
+        "ci95_low": 453.1766390624284,
+        "mean": 701.1042132435812,
+        "n": 20,
+        "stddev": 565.6968462915095
+      },
+      "wins": 20,
+      "worlds": 20,
+      "worlds_with_errors": 0
+    },
+    "stop_early": {
+      "losses": 0,
+      "reward_difference": {
+        "ci95_high": 0.7771320315948661,
+        "ci95_low": 0.7133632471299648,
+        "mean": 0.7452476393624154,
+        "n": 20,
+        "stddev": 0.07275068209492432
+      },
+      "ties": 0,
+      "utility_difference": {
+        "ci95_high": 4330.1552346989865,
+        "ci95_low": 3738.204825059911,
+        "mean": 4034.1800298794487,
+        "n": 20,
+        "stddev": 675.3272220723568
+      },
+      "wins": 20,
+      "worlds": 20,
+      "worlds_with_errors": 0
+    }
+  },
+  "policies": {
+    "deadline_first": {
+      "deliveries": {
+        "ci95_high": 47.821699293823265,
+        "ci95_low": 43.87830070617674,
+        "mean": 45.85,
+        "n": 20,
+        "stddev": 4.498830257323622
+      },
+      "driving_cost": {
+        "ci95_high": 94.90759818461477,
+        "ci95_low": 90.04455763042021,
+        "mean": 92.47607790751749,
+        "n": 20,
+        "stddev": 5.548004722712887
+      },
+      "driving_distance_km": {
+        "ci95_high": 271.1645662417565,
+        "ci95_low": 257.2701646583435,
+        "mean": 264.21736545005,
+        "n": 20,
+        "stddev": 15.851442064893963
+      },
+      "episodes": 20,
+      "errors": 0,
+      "invalid_actions": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "invalid_actions_total": 0,
+      "late_deliveries": {
+        "ci95_high": 23.303583925704512,
+        "ci95_low": 15.89641607429549,
+        "mean": 19.6,
+        "n": 20,
+        "stddev": 8.450474916582468
+      },
+      "on_time_generated_percentage": {
+        "ci95_high": 60.33433753811142,
+        "ci95_low": 40.62179299226995,
+        "mean": 50.478065265190686,
+        "n": 20,
+        "stddev": 22.48907633367054
+      },
+      "on_time_percentage": {
+        "ci95_high": 64.84312367631924,
+        "ci95_low": 46.74341507146464,
+        "mean": 55.79326937389194,
+        "n": 20,
+        "stddev": 20.649070823159583
+      },
+      "policy_runtime_seconds": {
+        "ci95_high": 0.026952905503869244,
+        "ci95_low": 0.0182199854987157,
+        "mean": 0.022586445501292473,
+        "n": 20,
+        "stddev": 0.00996296059877099
+      },
+      "realized_delivery_value": {
+        "ci95_high": 4056.3220799315322,
+        "ci95_low": 3038.9739626848204,
+        "mean": 3547.6480213081763,
+        "n": 20,
+        "stddev": 1160.6426259923849
+      },
+      "reward": {
+        "ci95_high": 0.7215235222330088,
+        "ci95_low": 0.5532767782610903,
+        "mean": 0.6374001502470495,
+        "n": 20,
+        "stddev": 0.19194446760929204
+      },
+      "runtime_seconds": {
+        "ci95_high": 1.772114877728701,
+        "ci95_low": 0.9040395183685619,
+        "mean": 1.3380771980486315,
+        "n": 20,
+        "stddev": 0.9903446495519539
+      },
+      "solver_fallback_rounds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "solver_runtime_seconds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "steps": {
+        "ci95_high": 14.0,
+        "ci95_low": 14.0,
+        "mean": 14.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "tool_response_characters": {
+        "ci95_high": 102863.25382507019,
+        "ci95_low": 99247.24617492981,
+        "mean": 101055.25,
+        "n": 20,
+        "stddev": 4125.325975955687
+      },
+      "total_utility": {
+        "ci95_high": 3964.4199881631644,
+        "ci95_low": 2945.923898638152,
+        "mean": 3455.171943400658,
+        "n": 20,
+        "stddev": 1161.952291324306
+      },
+      "undelivered_orders": {
+        "ci95_high": 8.10108234469729,
+        "ci95_low": 4.1989176553027105,
+        "mean": 6.15,
+        "n": 20,
+        "stddev": 4.4517885229008325
+      },
+      "unserved_face_value": {
+        "ci95_high": 916.6591391469292,
+        "ci95_low": 399.4408608530707,
+        "mean": 658.05,
+        "n": 20,
+        "stddev": 590.0689946277915
+      }
+    },
+    "do_nothing": {
+      "deliveries": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "driving_cost": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "driving_distance_km": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "episodes": 20,
+      "errors": 0,
+      "invalid_actions": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "invalid_actions_total": 0,
+      "late_deliveries": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "on_time_generated_percentage": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "on_time_percentage": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "policy_runtime_seconds": {
+        "ci95_high": 5.024246146309294e-07,
+        "ci95_low": 4.1447555680171474e-07,
+        "mean": 4.584500857163221e-07,
+        "n": 20,
+        "stddev": 1.0033677135876735e-07
+      },
+      "realized_delivery_value": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "reward": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "runtime_seconds": {
+        "ci95_high": 0.4086307397231753,
+        "ci95_low": 0.14696270607642925,
+        "mean": 0.2777967228998023,
+        "n": 20,
+        "stddev": 0.29852424019021756
+      },
+      "solver_fallback_rounds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "solver_runtime_seconds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "steps": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "tool_response_characters": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "total_utility": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "undelivered_orders": {
+        "ci95_high": 52.76573459741885,
+        "ci95_low": 51.23426540258115,
+        "mean": 52.0,
+        "n": 20,
+        "stddev": 1.747178176073456
+      },
+      "unserved_face_value": {
+        "ci95_high": 5663.267567826354,
+        "ci95_low": 5136.832432173646,
+        "mean": 5400.05,
+        "n": 20,
+        "stddev": 600.5840556447839
+      }
+    },
+    "greedy_insertion": {
+      "deliveries": {
+        "ci95_high": 48.05174559029294,
+        "ci95_low": 43.84825440970707,
+        "mean": 45.95,
+        "n": 20,
+        "stddev": 4.795557154393286
+      },
+      "driving_cost": {
+        "ci95_high": 93.82236087268669,
+        "ci95_low": 87.95079999731331,
+        "mean": 90.886580435,
+        "n": 20,
+        "stddev": 6.6985761486546185
+      },
+      "driving_distance_km": {
+        "ci95_high": 268.0638882076763,
+        "ci95_low": 251.2879999923238,
+        "mean": 259.67594410000004,
+        "n": 20,
+        "stddev": 19.13878899615605
+      },
+      "episodes": 20,
+      "errors": 0,
+      "invalid_actions": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "invalid_actions_total": 0,
+      "late_deliveries": {
+        "ci95_high": 8.842102882568277,
+        "ci95_low": 4.857897117431722,
+        "mean": 6.85,
+        "n": 20,
+        "stddev": 4.5453851669346435
+      },
+      "on_time_generated_percentage": {
+        "ci95_high": 81.91029923129855,
+        "ci95_low": 68.5556459716056,
+        "mean": 75.23297260145208,
+        "n": 20,
+        "stddev": 15.23566964521051
+      },
+      "on_time_percentage": {
+        "ci95_high": 89.19287937661667,
+        "ci95_low": 79.81856783158574,
+        "mean": 84.5057236041012,
+        "n": 20,
+        "stddev": 10.694692784158306
+      },
+      "policy_runtime_seconds": {
+        "ci95_high": 0.03075340688591755,
+        "ci95_low": 0.022939015110757417,
+        "mean": 0.026846210998337484,
+        "n": 20,
+        "stddev": 0.008915056740853734
+      },
+      "realized_delivery_value": {
+        "ci95_high": 5106.163422924324,
+        "ci95_low": 4450.957045479462,
+        "mean": 4778.560234201893,
+        "n": 20,
+        "stddev": 747.492856764334
+      },
+      "reward": {
+        "ci95_high": 0.9060668479544247,
+        "ci95_low": 0.828717812460636,
+        "mean": 0.8673923302075304,
+        "n": 20,
+        "stddev": 0.08824372518273245
+      },
+      "runtime_seconds": {
+        "ci95_high": 1.960947094699084,
+        "ci95_low": 0.9187966594006796,
+        "mean": 1.4398718770498817,
+        "n": 20,
+        "stddev": 1.1889383755654228
+      },
+      "solver_fallback_rounds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "solver_runtime_seconds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "steps": {
+        "ci95_high": 14.0,
+        "ci95_low": 14.0,
+        "mean": 14.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "tool_response_characters": {
+        "ci95_high": 102543.2226611918,
+        "ci95_low": 98905.2773388082,
+        "mean": 100724.25,
+        "n": 20,
+        "stddev": 4150.353591467903
+      },
+      "total_utility": {
+        "ci95_high": 5015.744913609284,
+        "ci95_low": 4359.602393924502,
+        "mean": 4687.673653766893,
+        "n": 20,
+        "stddev": 748.5608555832471
+      },
+      "undelivered_orders": {
+        "ci95_high": 7.9917333005658415,
+        "ci95_low": 4.108266699434158,
+        "mean": 6.05,
+        "n": 20,
+        "stddev": 4.430456790041074
+      },
+      "unserved_face_value": {
+        "ci95_high": 513.6490349971431,
+        "ci95_low": 233.75096500285693,
+        "mean": 373.7,
+        "n": 20,
+        "stddev": 319.32199555011124
+      }
+    },
+    "nearest_first": {
+      "deliveries": {
+        "ci95_high": 48.2339116577617,
+        "ci95_low": 44.166088342238304,
+        "mean": 46.2,
+        "n": 20,
+        "stddev": 4.6407803336576015
+      },
+      "driving_cost": {
+        "ci95_high": 88.58947568788871,
+        "ci95_low": 83.31865990714628,
+        "mean": 85.9540677975175,
+        "n": 20,
+        "stddev": 6.013215501336056
+      },
+      "driving_distance_km": {
+        "ci95_high": 253.11278767968201,
+        "ci95_low": 238.053314020418,
+        "mean": 245.58305085005,
+        "n": 20,
+        "stddev": 17.180615718103017
+      },
+      "episodes": 20,
+      "errors": 0,
+      "invalid_actions": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "invalid_actions_total": 0,
+      "late_deliveries": {
+        "ci95_high": 11.474654631960355,
+        "ci95_low": 6.825345368039645,
+        "mean": 9.15,
+        "n": 20,
+        "stddev": 5.3041691645643985
+      },
+      "on_time_generated_percentage": {
+        "ci95_high": 78.42702099483984,
+        "ci95_low": 64.0852291712394,
+        "mean": 71.25612508303962,
+        "n": 20,
+        "stddev": 16.361847671796536
+      },
+      "on_time_percentage": {
+        "ci95_high": 85.09198768274449,
+        "ci95_low": 73.8328518587923,
+        "mean": 79.46241977076839,
+        "n": 20,
+        "stddev": 12.844996464418475
+      },
+      "policy_runtime_seconds": {
+        "ci95_high": 0.018892680483777465,
+        "ci95_low": 0.014483342008525114,
+        "mean": 0.01668801124615129,
+        "n": 20,
+        "stddev": 0.005030398248198738
+      },
+      "realized_delivery_value": {
+        "ci95_high": 4604.668821064657,
+        "ci95_low": 3754.907554311303,
+        "mean": 4179.78818768798,
+        "n": 20,
+        "stddev": 969.4509985238933
+      },
+      "reward": {
+        "ci95_high": 0.8194649324089127,
+        "ci95_low": 0.6926862488116468,
+        "mean": 0.7560755906102797,
+        "n": 20,
+        "stddev": 0.14463558909256333
+      },
+      "runtime_seconds": {
+        "ci95_high": 2.936937011887423,
+        "ci95_low": 1.7771058593120674,
+        "mean": 2.357021435599745,
+        "n": 20,
+        "stddev": 1.3231945406022578
+      },
+      "solver_fallback_rounds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "solver_runtime_seconds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "steps": {
+        "ci95_high": 14.0,
+        "ci95_low": 14.0,
+        "mean": 14.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "tool_response_characters": {
+        "ci95_high": 102075.7618249778,
+        "ci95_low": 98422.03817502219,
+        "mean": 100248.9,
+        "n": 20,
+        "stddev": 4168.354312397665
+      },
+      "total_utility": {
+        "ci95_high": 4519.859579957845,
+        "ci95_low": 3667.8086598230802,
+        "mean": 4093.8341198904627,
+        "n": 20,
+        "stddev": 972.063151894173
+      },
+      "undelivered_orders": {
+        "ci95_high": 7.601988609111729,
+        "ci95_low": 3.9980113908882715,
+        "mean": 5.8,
+        "n": 20,
+        "stddev": 4.11160104556543
+      },
+      "unserved_face_value": {
+        "ci95_high": 870.2825656985627,
+        "ci95_low": 444.71743430143727,
+        "mean": 657.5,
+        "n": 20,
+        "stddev": 485.50640951918496
+      }
+    },
+    "rolling_horizon_solver": {
+      "deliveries": {
+        "ci95_high": 48.639853652006785,
+        "ci95_low": 45.360146347993215,
+        "mean": 47.0,
+        "n": 20,
+        "stddev": 3.7416573867739413
+      },
+      "driving_cost": {
+        "ci95_high": 94.02911606458072,
+        "ci95_low": 87.60695887045428,
+        "mean": 90.8180374675175,
+        "n": 20,
+        "stddev": 7.326724514416348
+      },
+      "driving_distance_km": {
+        "ci95_high": 268.65461732737344,
+        "ci95_low": 250.3055967727265,
+        "mean": 259.48010705005,
+        "n": 20,
+        "stddev": 20.933498612618134
+      },
+      "episodes": 20,
+      "errors": 0,
+      "invalid_actions": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "invalid_actions_total": 0,
+      "late_deliveries": {
+        "ci95_high": 9.483074699338855,
+        "ci95_low": 5.516925300661144,
+        "mean": 7.5,
+        "n": 20,
+        "stddev": 4.52478554304249
+      },
+      "on_time_generated_percentage": {
+        "ci95_high": 81.67096770833841,
+        "ci95_low": 70.35095802901462,
+        "mean": 76.01096286867651,
+        "n": 20,
+        "stddev": 12.914444463736526
+      },
+      "on_time_percentage": {
+        "ci95_high": 88.0530246135439,
+        "ci95_low": 79.40449605868685,
+        "mean": 83.72876033611537,
+        "n": 20,
+        "stddev": 9.866682527555284
+      },
+      "policy_runtime_seconds": {
+        "ci95_high": 1.4121169745247664,
+        "ci95_low": 1.044502230177526,
+        "mean": 1.2283096023511462,
+        "n": 20,
+        "stddev": 0.41939365198552864
+      },
+      "realized_delivery_value": {
+        "ci95_high": 5186.4628380826625,
+        "ci95_low": 4585.049903120461,
+        "mean": 4885.756370601562,
+        "n": 20,
+        "stddev": 686.1225536342574
+      },
+      "reward": {
+        "ci95_high": 0.9170863950524837,
+        "ci95_low": 0.8572585052214616,
+        "mean": 0.8871724501369727,
+        "n": 20,
+        "stddev": 0.06825470847578238
+      },
+      "runtime_seconds": {
+        "ci95_high": 3.244164571594017,
+        "ci95_low": 1.9966480075052757,
+        "mean": 2.6204062895496465,
+        "n": 20,
+        "stddev": 1.423230530795612
+      },
+      "solver_fallback_rounds": {
+        "ci95_high": 0.148,
+        "ci95_low": -0.04799999999999999,
+        "mean": 0.05,
+        "n": 20,
+        "stddev": 0.22360679774997896
+      },
+      "solver_runtime_seconds": {
+        "ci95_high": 1.4113698302837046,
+        "ci95_low": 1.043831682516272,
+        "mean": 1.2276007563999882,
+        "n": 20,
+        "stddev": 0.4193062667001743
+      },
+      "steps": {
+        "ci95_high": 14.0,
+        "ci95_low": 14.0,
+        "mean": 14.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "tool_response_characters": {
+        "ci95_high": 102598.4997270853,
+        "ci95_low": 98969.2002729147,
+        "mean": 100783.85,
+        "n": 20,
+        "stddev": 4140.489943994043
+      },
+      "total_utility": {
+        "ci95_high": 5096.178623689931,
+        "ci95_low": 4493.698042578158,
+        "mean": 4794.938333134044,
+        "n": 20,
+        "stddev": 687.3405788211745
+      },
+      "undelivered_orders": {
+        "ci95_high": 6.36387065291938,
+        "ci95_low": 3.6361293470806197,
+        "mean": 5.0,
+        "n": 20,
+        "stddev": 3.1119464208619965
+      },
+      "unserved_face_value": {
+        "ci95_high": 401.32977146769093,
+        "ci95_low": 200.47022853230902,
+        "mean": 300.9,
+        "n": 20,
+        "stddev": 229.1508122107406
+      }
+    },
+    "stop_early": {
+      "deliveries": {
+        "ci95_high": 11.987919579415026,
+        "ci95_low": 11.412080420584973,
+        "mean": 11.7,
+        "n": 20,
+        "stddev": 0.6569466853317864
+      },
+      "driving_cost": {
+        "ci95_high": 26.385048005337815,
+        "ci95_low": 22.183795289662186,
+        "mean": 24.2844216475,
+        "n": 20,
+        "stddev": 4.7930033994419885
+      },
+      "driving_distance_km": {
+        "ci95_high": 75.38585144382232,
+        "ci95_low": 63.38227225617767,
+        "mean": 69.38406185,
+        "n": 20,
+        "stddev": 13.69429542697711
+      },
+      "episodes": 20,
+      "errors": 0,
+      "invalid_actions": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "invalid_actions_total": 0,
+      "late_deliveries": {
+        "ci95_high": 1.5522264115128284,
+        "ci95_low": 0.5477735884871718,
+        "mean": 1.05,
+        "n": 20,
+        "stddev": 1.1459310165698642
+      },
+      "on_time_generated_percentage": {
+        "ci95_high": 21.56486972269252,
+        "ci95_low": 19.38381787039019,
+        "mean": 20.474343796541355,
+        "n": 20,
+        "stddev": 2.4882552062244128
+      },
+      "on_time_percentage": {
+        "ci95_high": 95.18792128156932,
+        "ci95_low": 86.75147265782462,
+        "mean": 90.96969696969697,
+        "n": 20,
+        "stddev": 9.624730924172274
+      },
+      "policy_runtime_seconds": {
+        "ci95_high": 0.003331616843214413,
+        "ci95_low": 0.00305670345477791,
+        "mean": 0.0031941601489961615,
+        "n": 20,
+        "stddev": 0.0003136352165657278
+      },
+      "realized_delivery_value": {
+        "ci95_high": 827.932247004117,
+        "ci95_low": 742.1532028000731,
+        "mean": 785.0427249020951,
+        "n": 20,
+        "stddev": 97.86110912510267
+      },
+      "reward": {
+        "ci95_high": 0.15081081500597113,
+        "ci95_low": 0.13303880654314318,
+        "mean": 0.14192481077455715,
+        "n": 20,
+        "stddev": 0.020275213785502493
+      },
+      "runtime_seconds": {
+        "ci95_high": 0.7748058905782973,
+        "ci95_low": 0.34473316782007063,
+        "mean": 0.559769529199184,
+        "n": 20,
+        "stddev": 0.49064889967133457
+      },
+      "solver_fallback_rounds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "solver_runtime_seconds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "steps": {
+        "ci95_high": 4.0,
+        "ci95_low": 4.0,
+        "mean": 4.0,
+        "n": 20,
+        "stddev": 0.0
+      },
+      "tool_response_characters": {
+        "ci95_high": 19361.105291014534,
+        "ci95_low": 19094.594708985464,
+        "mean": 19227.85,
+        "n": 20,
+        "stddev": 304.0488663979768
+      },
+      "total_utility": {
+        "ci95_high": 803.6094510263604,
+        "ci95_low": 717.9071554828297,
+        "mean": 760.758303254595,
+        "n": 20,
+        "stddev": 97.77355033832242
+      },
+      "undelivered_orders": {
+        "ci95_high": 41.026439623310694,
+        "ci95_low": 39.5735603766893,
+        "mean": 40.3,
+        "n": 20,
+        "stddev": 1.6575187543592476
+      },
+      "unserved_face_value": {
+        "ci95_high": 4854.876951233185,
+        "ci95_low": 4343.823048766816,
+        "mean": 4599.35,
+        "n": 20,
+        "stddev": 583.0363602455863
+      }
+    }
+  },
+  "policies_evaluated": [
+    "rolling_horizon_solver",
+    "nearest_first",
+    "deadline_first",
+    "greedy_insertion",
+    "stop_early",
+    "do_nothing"
+  ],
+  "private_artifacts": "engine/runs/dispatch-v2/mechanics-v2-r1/D/development/20261114T183835720480Z",
+  "python": "3.14.8",
+  "reference_policy": "rolling_horizon_solver",
+  "regime": "D",
+  "runtime_note": "Wall time is observational only; it does not control solver search.",
+  "salt_manifest_sha256": null,
+  "salt_namespace": null,
+  "seeds": [
+    3000,
+    3001,
+    3002,
+    3003,
+    3004,
+    3005,
+    3006,
+    3007,
+    3008,
+    3009,
+    3010,
+    3011,
+    3012,
+    3013,
+    3014,
+    3015,
+    3016,
+    3017,
+    3018,
+    3019
+  ],
+  "source_changed_during_run": false,
+  "source_files": {
+    "engine/pyproject.toml": "774e01a6ff26cad80a1eab9462cafd4f43d572e4e96ee4bc3e5519f68dadf974",
+    "engine/src/crucible/__init__.py": "f9f59ee8fb3658c98b3da5e8654e01a25cef5f30f1ca51a364d25430a8fb8dfa",
+    "engine/src/crucible/agents/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/src/crucible/agents/remote.py": "98abd93ab67201811c16e594bef9d45d8fbb219a59a73b1188be15aa07054dd1",
+    "engine/src/crucible/cli.py": "8ad80bdfd6290adaaf49e15164d9a174d519536638e01781d3c7abf4aa47511f",
+    "engine/src/crucible/core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/src/crucible/core/episode.py": "d97c10bc5057e1029a81cf70f5862c37f01eba8748705db445b6c37f3b1f3b8b",
+    "engine/src/crucible/core/executor.py": "de686fa7f9789a2e0063e7770e0f5d96002b29d174ed9d5d4df3761fec345a5f",
+    "engine/src/crucible/core/jobs.py": "ef4c0c21ad787d6a4c3f17debda4ea786f9bd4a0f390f28ef7e2f2ae5f47458d",
+    "engine/src/crucible/core/policy.py": "f5e0b6b770efee9324a7f4dbf6701f3474ca7218f0bc24584e37a5792756bb12",
+    "engine/src/crucible/core/registry.py": "3de68b5c238dc8c82241290810b1a36553bc1ce9a137b6599e9b0e4165ac8197",
+    "engine/src/crucible/core/rng.py": "9695f1ffd31b8cd76965c4fb5a00c794bef73f2b1bd7fcd2c9893e269145a3a1",
+    "engine/src/crucible/core/scoring.py": "dbfbb2623a218fab94ee9473a44e25bec92e75a17717ead57d2939a3051860bc",
+    "engine/src/crucible/core/session.py": "4b4fec2306826e5efa349d64ef96123557165d2a497b912967ac3d9f3c75955a",
+    "engine/src/crucible/core/task.py": "88d8d0952c2252946a5a5a94d4ba6a5370338de7434ea6a47f12520e84930584",
+    "engine/src/crucible/core/tools.py": "529c0621c239c5bd5523816a28274a6099e1caf0290376d5bb24986e71bde0c8",
+    "engine/src/crucible/core/transcript.py": "59880a85267a1f766709b1817c941234c26a71f43769b7dca301dfaab69366a3",
+    "engine/src/crucible/envs/__init__.py": "289a5b3386a58af6ca42fb3dce4fd84b2e69eec4b74d1d600a89efb220db1c42",
+    "engine/src/crucible/envs/dispatch/__init__.py": "84f40518951d928978891a9b390d0fa86b505a74f990b91034192b3886e52e84",
+    "engine/src/crucible/envs/dispatch/backend.py": "5fcaebb81b04d7ad810d526402ea63f610623973055b06b63f71e86e5940084e",
+    "engine/src/crucible/envs/dispatch/backend_service/__init__.py": "39842797b42d3c0428a9b2d946a805ac2aa65c3317ac782b5c6c041a6ebc5570",
+    "engine/src/crucible/envs/dispatch/backend_service/app.py": "5b22ad248aa2d535d5879004fd4168158f45ebea99c2f5b44f767331dfc1c7a5",
+    "engine/src/crucible/envs/dispatch/backend_service/database.py": "74745100650aa604a9326c66ce345194f66ff2dc6d42373ef3425901fe78702a",
+    "engine/src/crucible/envs/dispatch/backend_service/models.py": "6f41e36ac6928c810ed580fdc5148fb9483b6a38892e507d31b12edbd547be98",
+    "engine/src/crucible/envs/dispatch/grader.py": "413e9b4aae514fdf5686fa8624627e0989c2f37fc1108f3dddf13f4663a9f392",
+    "engine/src/crucible/envs/dispatch/policies/__init__.py": "217a6b24432b459a65abfd327afe056dfdf81cff5354ab29b446ae10dcc7f5b9",
+    "engine/src/crucible/envs/dispatch/policies/baselines.py": "3ca5af97b13b018a4900a64fc5730533f013f7542a18593f8df8302d2d28b280",
+    "engine/src/crucible/envs/dispatch/policies/deadline.py": "1cc50152dad8d7d4b6ec4ee113a9fb7fdecd2675df34fb20c02a1dd40ce02fd6",
+    "engine/src/crucible/envs/dispatch/policies/greedy.py": "2d134666a9475a327926c1cfb9347256f153bbaf662014f30885cb0e8bbc448c",
+    "engine/src/crucible/envs/dispatch/policies/planning.py": "d053c51b404a0d287d55351c78063e464aa1034dbd89b02b890440c7257dcd33",
+    "engine/src/crucible/envs/dispatch/policies/reference.py": "bd62b9463196d8eee1375908aa8487ee8da83691f6cc3b0cca467ee325cf85a9",
+    "engine/src/crucible/envs/dispatch/policies/v2/__init__.py": "4e8b7091ba145f24d0aa846426355e111e895ad334779023cad8d4a0598936ff",
+    "engine/src/crucible/envs/dispatch/policies/v2/baselines.py": "1e43bb3d0bba04be4c56e8fd12bcaa0989867fe0b891120432046f26a4835639",
+    "engine/src/crucible/envs/dispatch/policies/v2/routing.py": "825a2658fba21bd524dad2195014287dd9c6d97655b767f1a596a0c9ff725de6",
+    "engine/src/crucible/envs/dispatch/policies/v2/solver.py": "7c7121d003c9f624f37d2d9f967fe4e7665c84de0c356eb66c1776095b1112b1",
+    "engine/src/crucible/envs/dispatch/policies/v2/views.py": "3bfcb735b8d6fd1c7be3d05f8179017fd09dc1319bdb93b26858014ae49851b5",
+    "engine/src/crucible/envs/dispatch/policies/views.py": "8f5dfad70cdf5d53999ca94e7cbd8bf03a203b0d8793362d27c6086591698289",
+    "engine/src/crucible/envs/dispatch/scoring.yaml": "f1863a0b7119e881a4988c1cbc575192ce1e988b37041ec6e8baf86252c966c7",
+    "engine/src/crucible/envs/dispatch/task.py": "16d5bdd2297987048866216f0071c4e9a40b7c812210f329a86d237065413a5b",
+    "engine/src/crucible/envs/dispatch/v2/__init__.py": "2eeba78f629b18f00cd6dc7579108653c9f6c424e5a795d6e9c8dd1cde624285",
+    "engine/src/crucible/envs/dispatch/v2/scenarios.py": "b8601d694c4dd3cdf7822e040b4bba093d7a027096c3a8d6eac3e07779d6b1d1",
+    "engine/src/crucible/envs/dispatch/v2/scoring.yaml": "4174987af1a6d0b379a1b9f84bb96229b39c86d5c2d4d29c7564efef308557cf",
+    "engine/src/crucible/envs/dispatch/v2/task.py": "3fc03eb03f54049263cc958e40d67b3b869fcd312849ed4ed2e8cf089b80d353",
+    "engine/src/crucible/envs/dispatch/v2/world.py": "46b0c8d8be6d1390a348bb5894a9355b292512af72a800ab9efe98f729da4016",
+    "engine/src/crucible/envs/dispatch/world.py": "e1c902a04f4d8c00900774da509faeda9b0fcc3500dba9f0f6bde629185e69bb",
+    "engine/src/crucible/envs/guess/__init__.py": "251e4e5024fbf2ec4030a501f38a4108d70dfce6d22a16cf6eb4035206da63b2",
+    "engine/src/crucible/envs/guess/policies/__init__.py": "fc11c4070523e7c4cec2b190b0392a46e94775f49e8cff22d6d8676c764e3e39",
+    "engine/src/crucible/envs/guess/policies/reference.py": "8b9502463f3ba7b68dbc0c775372b7f96c985b9b63983a310cbcb989b8b0e381",
+    "engine/src/crucible/envs/guess/task.py": "b7cdf260aa068e3d75652e591f2b32317ab053dcd45228f9f02746125493b4e6",
+    "engine/src/crucible/envs/incident/__init__.py": "03613e9ec4a0192eaddac7cea3862a12b22db3901b0c8e9a23261f69288e898d",
+    "engine/src/crucible/envs/incident/grader.py": "db13c4c864b951185facf55dc6b05d6fa47bc3a23b8b542c8322e1e898b3bd16",
+    "engine/src/crucible/envs/incident/policies/__init__.py": "af6655fd5cd3b21a104e5977ca19f5c41497f36dcb63a86e7c6f02fc7ec2f624",
+    "engine/src/crucible/envs/incident/policies/baselines.py": "92fd03c4c5eeea7318b5692fcf374917ffeff8123a040d3c8edafe52922fabca",
+    "engine/src/crucible/envs/incident/policies/reference.py": "edddc873df57cef93d7e12617aade30f2ef7c13bda8f81004c3b3c372c340e62",
+    "engine/src/crucible/envs/incident/policies/views.py": "b82c89d2c677eec68623b581df4a812a390fa19175d760edd312fca423ee8cb6",
+    "engine/src/crucible/envs/incident/scoring.yaml": "ad08e6f53969bc7f8d918ef72f7c31e8eefee41b0fdeccfe0e80cf344597ed72",
+    "engine/src/crucible/envs/incident/sim.py": "dcd4fcf2900ad1ee1f8e96d6a9d7381a01b2f06b79c33df39f6bd6604db10964",
+    "engine/src/crucible/envs/incident/state.py": "a8f1f0ddec88634c36e260f4f945c84c89e3441bc6829c636fc6c525a80af290",
+    "engine/src/crucible/envs/incident/task.py": "b42b2e22e91eb3a5ef61e1f1736360b8712f43c4bc14017621246c70c6d0bb5f",
+    "engine/src/crucible/envs/incident/world.py": "41957f06a20336ab75847d505f4dacc8791d8a598bca7eaca2fe4978e676244f",
+    "engine/src/crucible/export/__init__.py": "4784803666b849f3c484ab43beb93524a8918b649fb8fd1536668abf38dd0cc6",
+    "engine/src/crucible/export/harbor.py": "c190cdf490d15cb9413338fcc8f14ae4172c80ff162324e9990f679d201272a6",
+    "engine/src/crucible/export/templates/harbor/environment/docker-compose.yaml": "c66f2d2bbf6a1e62ff875ead1003856327b38f443d926cc6cc439357dce18842",
+    "engine/src/crucible/export/templates/harbor/solution/solve.sh": "107b127c8e4a3faca5cf21590552c081fdb183f95baad3e7661d700e65107ba1",
+    "engine/src/crucible/export/templates/harbor/task.toml": "5f2a5a9f58a7d607ee9500f863749cf58f9c452e093aa89777663e48bfd4381b",
+    "engine/src/crucible/policies/__init__.py": "26410222541b1e671c97c1c60242eb2837e331ea34066fb21822ced3da9b4117",
+    "engine/src/crucible/policies/baselines.py": "3ae6b590e65803f20c25bd3e05970298235b3647316a6de47281d5ce4ab31e05",
+    "engine/src/crucible/scaffold.py": "3c0a298b050b6b7c1d6786d05dd795ad77153b954254e458497a4b4b280c8e57",
+    "engine/src/crucible/server/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/src/crucible/server/app.py": "7e73b541fd26900f12b97735b6c7f86e7523191edb6a24d418f844639019600e",
+    "engine/src/crucible/server/logging.py": "af042358ab387c04f50ec3be410a03a218e158639690d983362d894e52b03e4e",
+    "engine/src/crucible/server/mcp.py": "384b19df3e9e251d413b4da5c9bddb2a24bee6f9042286624d63eccf3b486fc7",
+    "engine/src/crucible/server/settings.py": "832ad7e4a8aebfbaddcb72e85a3f7effa622951a2cc6341ca79c5a77b54b455c",
+    "engine/src/crucible/server/store.py": "733ac89191e0c1577e27ce652cdbbd46b3da277fba11399ea2ff50ecd18bc601",
+    "engine/src/crucible/testing.py": "b7185cad49f7856c3e985bbd47af511761924d2879372697407edab11f3a1b3a",
+    "engine/uv.lock": "cefb7bf30ce70d630f091f22f9d692d34c2bce64846a36ae12f0e179c47870c2",
+    "spikes/dynamic-dispatch-v2/evaluate.py": "80cb72d4ee3542ffeee1bb74bdad4bd2f94b47c1fee06df3f94ad8ef5a8bfd91"
+  },
+  "source_sha256": "ca62a4ad0e7fdbc92261b23faf9619018c6c6b16189f419912cf641b31b10d05",
+  "split": "development",
+  "task": "dispatch@2"
+}

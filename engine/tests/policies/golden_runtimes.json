@@ -1,0 +1,8 @@
+{
+  "dispatch@2": {
+    "system": "Linux",
+    "machine": "aarch64",
+    "python": "3.14.10",
+    "reason": "OR-Tools optimal ties and budget-limited search differ across compiled runtimes. Canonical scores use the frozen Linux ARM64 image in spikes/dynamic-dispatch-v2/runtime-linux.json. Native validity and same-runtime determinism tests still run."
+  }
+}

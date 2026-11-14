@@ -28,14 +28,15 @@ class Vehicle(Request):
 class Reset(Request):
     vehicles: list[Vehicle] = Field(min_length=1, max_length=4)
     depot: str
+    version: Literal[1, 2] = 1
 
 
 class Plan(Request):
-    routes: dict[str, list[str]]
+    routes: dict[str, list[str] | list[list[str]]]
 
 
 class SimulatorEvent(Request):
-    type: Literal["clock", "move", "pickup", "deliver"]
+    type: Literal["clock", "move", "pickup", "deliver", "depot_return"]
     minute: float = Field(ge=0)
     vehicle_id: str | None = None
     node: str | None = None

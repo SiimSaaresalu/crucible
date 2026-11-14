@@ -1,0 +1,371 @@
+{
+  "accepted": true,
+  "base_git_commit": "a434cb76114149b081968bf110a4a2ff5aadc812",
+  "candidate": "tooling-smoke-v2",
+  "confidence_interval": "normal approximation: mean +/- 1.96 * sample_stddev / sqrt(n)",
+  "error_handling": "All worlds retained. Failed rewards are zero; missing economic metrics have explicit n. Any episode error invalidates acceptance.",
+  "errors": 0,
+  "full_split": false,
+  "ortools": "9.15.6755",
+  "paired_reference_minus_baseline": {},
+  "policies": {
+    "do_nothing": {
+      "deliveries": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "driving_cost": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "driving_distance_km": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "episodes": 1,
+      "errors": 0,
+      "invalid_actions": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "invalid_actions_total": 0,
+      "late_deliveries": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "on_time_generated_percentage": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "on_time_percentage": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "policy_runtime_seconds": {
+        "ci95_high": 4.169996827840805e-07,
+        "ci95_low": 4.169996827840805e-07,
+        "mean": 4.169996827840805e-07,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "realized_delivery_value": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "reward": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "runtime_seconds": {
+        "ci95_high": 0.08163916699413676,
+        "ci95_low": 0.08163916699413676,
+        "mean": 0.08163916699413676,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "solver_fallback_rounds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "solver_runtime_seconds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "steps": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "tool_response_characters": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "total_utility": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "undelivered_orders": {
+        "ci95_high": 44.0,
+        "ci95_low": 44.0,
+        "mean": 44.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "unserved_face_value": {
+        "ci95_high": 2802.0,
+        "ci95_low": 2802.0,
+        "mean": 2802.0,
+        "n": 1,
+        "stddev": 0.0
+      }
+    },
+    "greedy_insertion": {
+      "deliveries": {
+        "ci95_high": 43.0,
+        "ci95_low": 43.0,
+        "mean": 43.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "driving_cost": {
+        "ci95_high": 74.19999999999999,
+        "ci95_low": 74.19999999999999,
+        "mean": 74.19999999999999,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "driving_distance_km": {
+        "ci95_high": 212.0,
+        "ci95_low": 212.0,
+        "mean": 212.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "episodes": 1,
+      "errors": 0,
+      "invalid_actions": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "invalid_actions_total": 0,
+      "late_deliveries": {
+        "ci95_high": 1.0,
+        "ci95_low": 1.0,
+        "mean": 1.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "on_time_generated_percentage": {
+        "ci95_high": 95.45454545454545,
+        "ci95_low": 95.45454545454545,
+        "mean": 95.45454545454545,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "on_time_percentage": {
+        "ci95_high": 97.67441860465117,
+        "ci95_low": 97.67441860465117,
+        "mean": 97.67441860465117,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "policy_runtime_seconds": {
+        "ci95_high": 0.007782667991705239,
+        "ci95_low": 0.007782667991705239,
+        "mean": 0.007782667991705239,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "realized_delivery_value": {
+        "ci95_high": 2754.387755102041,
+        "ci95_low": 2754.387755102041,
+        "mean": 2754.387755102041,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "reward": {
+        "ci95_high": 0.9565266791941617,
+        "ci95_low": 0.9565266791941617,
+        "mean": 0.9565266791941617,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "runtime_seconds": {
+        "ci95_high": 0.38254708299791673,
+        "ci95_low": 0.38254708299791673,
+        "mean": 0.38254708299791673,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "solver_fallback_rounds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "solver_runtime_seconds": {
+        "ci95_high": null,
+        "ci95_low": null,
+        "mean": null,
+        "n": 0,
+        "stddev": null
+      },
+      "steps": {
+        "ci95_high": 14.0,
+        "ci95_low": 14.0,
+        "mean": 14.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "tool_response_characters": {
+        "ci95_high": 82181.0,
+        "ci95_low": 82181.0,
+        "mean": 82181.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "total_utility": {
+        "ci95_high": 2680.187755102041,
+        "ci95_low": 2680.187755102041,
+        "mean": 2680.187755102041,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "undelivered_orders": {
+        "ci95_high": 1.0,
+        "ci95_low": 1.0,
+        "mean": 1.0,
+        "n": 1,
+        "stddev": 0.0
+      },
+      "unserved_face_value": {
+        "ci95_high": 42.0,
+        "ci95_low": 42.0,
+        "mean": 42.0,
+        "n": 1,
+        "stddev": 0.0
+      }
+    }
+  },
+  "policies_evaluated": [
+    "greedy_insertion",
+    "do_nothing"
+  ],
+  "private_artifacts": "engine/runs/dispatch-v2/tooling-smoke-v2/A/development/20261114T183558828512Z",
+  "python": "3.14.8",
+  "reference_policy": null,
+  "regime": "A",
+  "runtime_note": "Wall time is observational only; it does not control solver search.",
+  "salt_namespace": null,
+  "seeds": [
+    3000
+  ],
+  "source_changed_during_run": false,
+  "source_files": {
+    "engine/pyproject.toml": "774e01a6ff26cad80a1eab9462cafd4f43d572e4e96ee4bc3e5519f68dadf974",
+    "engine/src/crucible/__init__.py": "f9f59ee8fb3658c98b3da5e8654e01a25cef5f30f1ca51a364d25430a8fb8dfa",
+    "engine/src/crucible/agents/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/src/crucible/agents/remote.py": "98abd93ab67201811c16e594bef9d45d8fbb219a59a73b1188be15aa07054dd1",
+    "engine/src/crucible/cli.py": "8ad80bdfd6290adaaf49e15164d9a174d519536638e01781d3c7abf4aa47511f",
+    "engine/src/crucible/core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/src/crucible/core/episode.py": "d97c10bc5057e1029a81cf70f5862c37f01eba8748705db445b6c37f3b1f3b8b",
+    "engine/src/crucible/core/executor.py": "de686fa7f9789a2e0063e7770e0f5d96002b29d174ed9d5d4df3761fec345a5f",
+    "engine/src/crucible/core/jobs.py": "ef4c0c21ad787d6a4c3f17debda4ea786f9bd4a0f390f28ef7e2f2ae5f47458d",
+    "engine/src/crucible/core/policy.py": "f5e0b6b770efee9324a7f4dbf6701f3474ca7218f0bc24584e37a5792756bb12",
+    "engine/src/crucible/core/registry.py": "3de68b5c238dc8c82241290810b1a36553bc1ce9a137b6599e9b0e4165ac8197",
+    "engine/src/crucible/core/rng.py": "9695f1ffd31b8cd76965c4fb5a00c794bef73f2b1bd7fcd2c9893e269145a3a1",
+    "engine/src/crucible/core/scoring.py": "dbfbb2623a218fab94ee9473a44e25bec92e75a17717ead57d2939a3051860bc",
+    "engine/src/crucible/core/session.py": "4b4fec2306826e5efa349d64ef96123557165d2a497b912967ac3d9f3c75955a",
+    "engine/src/crucible/core/task.py": "88d8d0952c2252946a5a5a94d4ba6a5370338de7434ea6a47f12520e84930584",
+    "engine/src/crucible/core/tools.py": "529c0621c239c5bd5523816a28274a6099e1caf0290376d5bb24986e71bde0c8",
+    "engine/src/crucible/core/transcript.py": "59880a85267a1f766709b1817c941234c26a71f43769b7dca301dfaab69366a3",
+    "engine/src/crucible/envs/__init__.py": "289a5b3386a58af6ca42fb3dce4fd84b2e69eec4b74d1d600a89efb220db1c42",
+    "engine/src/crucible/envs/dispatch/__init__.py": "84f40518951d928978891a9b390d0fa86b505a74f990b91034192b3886e52e84",
+    "engine/src/crucible/envs/dispatch/backend.py": "5fcaebb81b04d7ad810d526402ea63f610623973055b06b63f71e86e5940084e",
+    "engine/src/crucible/envs/dispatch/backend_service/__init__.py": "39842797b42d3c0428a9b2d946a805ac2aa65c3317ac782b5c6c041a6ebc5570",
+    "engine/src/crucible/envs/dispatch/backend_service/app.py": "5b22ad248aa2d535d5879004fd4168158f45ebea99c2f5b44f767331dfc1c7a5",
+    "engine/src/crucible/envs/dispatch/backend_service/database.py": "517241a8b368836ccd27342d552ca408abc540f16eeb97b18abcb3a6ab32a620",
+    "engine/src/crucible/envs/dispatch/backend_service/models.py": "6f41e36ac6928c810ed580fdc5148fb9483b6a38892e507d31b12edbd547be98",
+    "engine/src/crucible/envs/dispatch/grader.py": "413e9b4aae514fdf5686fa8624627e0989c2f37fc1108f3dddf13f4663a9f392",
+    "engine/src/crucible/envs/dispatch/policies/__init__.py": "217a6b24432b459a65abfd327afe056dfdf81cff5354ab29b446ae10dcc7f5b9",
+    "engine/src/crucible/envs/dispatch/policies/baselines.py": "3ca5af97b13b018a4900a64fc5730533f013f7542a18593f8df8302d2d28b280",
+    "engine/src/crucible/envs/dispatch/policies/deadline.py": "1cc50152dad8d7d4b6ec4ee113a9fb7fdecd2675df34fb20c02a1dd40ce02fd6",
+    "engine/src/crucible/envs/dispatch/policies/greedy.py": "2d134666a9475a327926c1cfb9347256f153bbaf662014f30885cb0e8bbc448c",
+    "engine/src/crucible/envs/dispatch/policies/planning.py": "d053c51b404a0d287d55351c78063e464aa1034dbd89b02b890440c7257dcd33",
+    "engine/src/crucible/envs/dispatch/policies/reference.py": "bd62b9463196d8eee1375908aa8487ee8da83691f6cc3b0cca467ee325cf85a9",
+    "engine/src/crucible/envs/dispatch/policies/v2/__init__.py": "4e8b7091ba145f24d0aa846426355e111e895ad334779023cad8d4a0598936ff",
+    "engine/src/crucible/envs/dispatch/policies/v2/baselines.py": "1e43bb3d0bba04be4c56e8fd12bcaa0989867fe0b891120432046f26a4835639",
+    "engine/src/crucible/envs/dispatch/policies/v2/routing.py": "825a2658fba21bd524dad2195014287dd9c6d97655b767f1a596a0c9ff725de6",
+    "engine/src/crucible/envs/dispatch/policies/v2/solver.py": "8f37a20ae9f8627ea833a9bed0dffe3bf4cb24cc04c7db3842720a20f624c71d",
+    "engine/src/crucible/envs/dispatch/policies/v2/views.py": "3bfcb735b8d6fd1c7be3d05f8179017fd09dc1319bdb93b26858014ae49851b5",
+    "engine/src/crucible/envs/dispatch/policies/views.py": "8f5dfad70cdf5d53999ca94e7cbd8bf03a203b0d8793362d27c6086591698289",
+    "engine/src/crucible/envs/dispatch/scoring.yaml": "f1863a0b7119e881a4988c1cbc575192ce1e988b37041ec6e8baf86252c966c7",
+    "engine/src/crucible/envs/dispatch/task.py": "16d5bdd2297987048866216f0071c4e9a40b7c812210f329a86d237065413a5b",
+    "engine/src/crucible/envs/dispatch/v2/__init__.py": "2eeba78f629b18f00cd6dc7579108653c9f6c424e5a795d6e9c8dd1cde624285",
+    "engine/src/crucible/envs/dispatch/v2/scenarios.py": "b8601d694c4dd3cdf7822e040b4bba093d7a027096c3a8d6eac3e07779d6b1d1",
+    "engine/src/crucible/envs/dispatch/v2/scoring.yaml": "4174987af1a6d0b379a1b9f84bb96229b39c86d5c2d4d29c7564efef308557cf",
+    "engine/src/crucible/envs/dispatch/v2/task.py": "3fc03eb03f54049263cc958e40d67b3b869fcd312849ed4ed2e8cf089b80d353",
+    "engine/src/crucible/envs/dispatch/v2/world.py": "46b0c8d8be6d1390a348bb5894a9355b292512af72a800ab9efe98f729da4016",
+    "engine/src/crucible/envs/dispatch/world.py": "e1c902a04f4d8c00900774da509faeda9b0fcc3500dba9f0f6bde629185e69bb",
+    "engine/src/crucible/envs/guess/__init__.py": "251e4e5024fbf2ec4030a501f38a4108d70dfce6d22a16cf6eb4035206da63b2",
+    "engine/src/crucible/envs/guess/policies/__init__.py": "fc11c4070523e7c4cec2b190b0392a46e94775f49e8cff22d6d8676c764e3e39",
+    "engine/src/crucible/envs/guess/policies/reference.py": "8b9502463f3ba7b68dbc0c775372b7f96c985b9b63983a310cbcb989b8b0e381",
+    "engine/src/crucible/envs/guess/task.py": "b7cdf260aa068e3d75652e591f2b32317ab053dcd45228f9f02746125493b4e6",
+    "engine/src/crucible/envs/incident/__init__.py": "03613e9ec4a0192eaddac7cea3862a12b22db3901b0c8e9a23261f69288e898d",
+    "engine/src/crucible/envs/incident/grader.py": "db13c4c864b951185facf55dc6b05d6fa47bc3a23b8b542c8322e1e898b3bd16",
+    "engine/src/crucible/envs/incident/policies/__init__.py": "af6655fd5cd3b21a104e5977ca19f5c41497f36dcb63a86e7c6f02fc7ec2f624",
+    "engine/src/crucible/envs/incident/policies/baselines.py": "92fd03c4c5eeea7318b5692fcf374917ffeff8123a040d3c8edafe52922fabca",
+    "engine/src/crucible/envs/incident/policies/reference.py": "edddc873df57cef93d7e12617aade30f2ef7c13bda8f81004c3b3c372c340e62",
+    "engine/src/crucible/envs/incident/policies/views.py": "b82c89d2c677eec68623b581df4a812a390fa19175d760edd312fca423ee8cb6",
+    "engine/src/crucible/envs/incident/scoring.yaml": "ad08e6f53969bc7f8d918ef72f7c31e8eefee41b0fdeccfe0e80cf344597ed72",
+    "engine/src/crucible/envs/incident/sim.py": "dcd4fcf2900ad1ee1f8e96d6a9d7381a01b2f06b79c33df39f6bd6604db10964",
+    "engine/src/crucible/envs/incident/state.py": "a8f1f0ddec88634c36e260f4f945c84c89e3441bc6829c636fc6c525a80af290",
+    "engine/src/crucible/envs/incident/task.py": "b42b2e22e91eb3a5ef61e1f1736360b8712f43c4bc14017621246c70c6d0bb5f",
+    "engine/src/crucible/envs/incident/world.py": "41957f06a20336ab75847d505f4dacc8791d8a598bca7eaca2fe4978e676244f",
+    "engine/src/crucible/export/__init__.py": "4784803666b849f3c484ab43beb93524a8918b649fb8fd1536668abf38dd0cc6",
+    "engine/src/crucible/export/harbor.py": "c190cdf490d15cb9413338fcc8f14ae4172c80ff162324e9990f679d201272a6",
+    "engine/src/crucible/export/templates/harbor/environment/docker-compose.yaml": "c66f2d2bbf6a1e62ff875ead1003856327b38f443d926cc6cc439357dce18842",
+    "engine/src/crucible/export/templates/harbor/solution/solve.sh": "107b127c8e4a3faca5cf21590552c081fdb183f95baad3e7661d700e65107ba1",
+    "engine/src/crucible/export/templates/harbor/task.toml": "5f2a5a9f58a7d607ee9500f863749cf58f9c452e093aa89777663e48bfd4381b",
+    "engine/src/crucible/policies/__init__.py": "26410222541b1e671c97c1c60242eb2837e331ea34066fb21822ced3da9b4117",
+    "engine/src/crucible/policies/baselines.py": "3ae6b590e65803f20c25bd3e05970298235b3647316a6de47281d5ce4ab31e05",
+    "engine/src/crucible/scaffold.py": "3c0a298b050b6b7c1d6786d05dd795ad77153b954254e458497a4b4b280c8e57",
+    "engine/src/crucible/server/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/src/crucible/server/app.py": "7e73b541fd26900f12b97735b6c7f86e7523191edb6a24d418f844639019600e",
+    "engine/src/crucible/server/logging.py": "af042358ab387c04f50ec3be410a03a218e158639690d983362d894e52b03e4e",
+    "engine/src/crucible/server/mcp.py": "384b19df3e9e251d413b4da5c9bddb2a24bee6f9042286624d63eccf3b486fc7",
+    "engine/src/crucible/server/settings.py": "832ad7e4a8aebfbaddcb72e85a3f7effa622951a2cc6341ca79c5a77b54b455c",
+    "engine/src/crucible/server/store.py": "733ac89191e0c1577e27ce652cdbbd46b3da277fba11399ea2ff50ecd18bc601",
+    "engine/src/crucible/testing.py": "b7185cad49f7856c3e985bbd47af511761924d2879372697407edab11f3a1b3a",
+    "engine/uv.lock": "cefb7bf30ce70d630f091f22f9d692d34c2bce64846a36ae12f0e179c47870c2",
+    "spikes/dynamic-dispatch-v2/evaluate.py": "8a35a5f6542924e32c0aa8d832c586af39ba65e8347d2bcaae3d8b5beb6b425d"
+  },
+  "source_sha256": "f17a56b26f358fb08d576e8875901cfe2a00fd4141a284e51f64245abd169d4e",
+  "split": "development",
+  "task": "dispatch@2"
+}

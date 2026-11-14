@@ -1,0 +1,17 @@
+{
+  "baseline_tests": "76 passed; existing dispatch suite and all golden scores",
+  "canonical_golden_check": "30 independently regenerated Linux episodes match canonical goldens",
+  "cross_platform_solver_regeneration": "Native Mac differs; canonical Linux reference matches Harbor exactly in two independent3-world batches",
+  "docker": "29.9.3",
+  "fresh_pinned_export": "Exact Python patch selectors failed bootstrap; restored successful minor selector3.14; corrected fresh retry pending",
+  "frontier_credential_source": "main checkout gitignored .env; contents never copied to artifacts",
+  "full_repository_command": "engine/.venv/bin/python -m pytest engine -q (socket-enabled)",
+  "full_repository_tests": "648 passed, 5 skipped in 538.95s",
+  "minimal_cp_sat": "OPTIMAL; x=3; single worker; deterministic budget 0.1",
+  "ortools": "9.15.6755",
+  "pyright": "0 errors, 0 warnings",
+  "python": "3.14.8",
+  "ruff": "All checks passed",
+  "simulator_recorded_action_replay": "All3pilotworlds exact public states/actions/economic outcomes; does not prove independently regenerated reference parity",
+  "v1_golden_and_historical_experiment_files_unchanged": true
+}

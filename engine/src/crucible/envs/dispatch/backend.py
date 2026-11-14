@@ -47,8 +47,13 @@ class DispatchBackend:
             raise ValueError(detail if isinstance(detail, str) else "Invalid dispatch request")
         return response.json()
 
-    async def reset(self, vehicles: list[dict[str, Any]], depot: str) -> dict[str, Any]:
-        return await self._request("POST", "/reset", {"vehicles": vehicles, "depot": depot})
+    async def reset(
+        self, vehicles: list[dict[str, Any]], depot: str, *, version: int = 1
+    ) -> dict[str, Any]:
+        payload: dict[str, Any] = {"vehicles": vehicles, "depot": depot}
+        if version != 1:
+            payload["version"] = version
+        return await self._request("POST", "/reset", payload)
 
     async def create_order(self, order: dict[str, Any]) -> dict[str, Any]:
         return await self._request("POST", "/orders", order)
@@ -56,7 +61,9 @@ class DispatchBackend:
     async def state(self) -> dict[str, Any]:
         return await self._request("GET", "/state")
 
-    async def submit_plan(self, routes: dict[str, list[str]]) -> dict[str, Any]:
+    async def submit_plan(
+        self, routes: dict[str, list[str]] | dict[str, list[list[str]]]
+    ) -> dict[str, Any]:
         return await self._request("POST", "/plans", {"routes": routes})
 
     async def simulator_event(self, event: dict[str, Any]) -> dict[str, Any]:

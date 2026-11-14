@@ -1,0 +1,86 @@
+{
+  "accepted_complete_comparison": false,
+  "agents": {
+    "nop": {
+      "completed_valid_trials": 3,
+      "errors": 0,
+      "invalid_actions": 0,
+      "observed_mean_reward": 0.0,
+      "observed_mean_utility": 0.0,
+      "trials": 3
+    },
+    "opencode": {
+      "completed_valid_trials": 3,
+      "errors": 3,
+      "invalid_actions": 0,
+      "observed_mean_reward": 0.9299659064434995,
+      "observed_mean_utility": 4991.5318507837665,
+      "trials": 6
+    },
+    "oracle": {
+      "completed_valid_trials": 3,
+      "errors": 0,
+      "invalid_actions": 0,
+      "observed_mean_reward": 0.8736378948008588,
+      "observed_mean_utility": 4681.563024113315,
+      "trials": 3
+    }
+  },
+  "expected_export_worlds": 3,
+  "expected_model_repeats_per_world": 3,
+  "export_manifest_sha256": "afb9288ccc73346225b26722f75cf20fc9c03a0c72b22fbfa167c0cc04b6783a",
+  "missing_data_rule": "Errors remain in trial counts. Means use explicitly counted valid trials; missing worlds invalidate complete-comparison acceptance.",
+  "observed_export_worlds": 3,
+  "paired_reference_minus_model": {
+    "losses": 3,
+    "raw_utility": {
+      "ci95_high": -153.71787159377436,
+      "ci95_low": -406.57734343003267,
+      "mean": -309.9688266704513,
+      "n_worlds": 3
+    },
+    "reward": {
+      "ci95_high": -0.03219896765684427,
+      "ci95_low": -0.07277203211563132,
+      "mean": -0.05632801164264064,
+      "n_worlds": 3
+    },
+    "ties": 0,
+    "wins": 0
+  },
+  "paired_worlds": [
+    {
+      "model_mean_reward": 0.9707782945371745,
+      "model_stddev_reward": 0.0,
+      "model_trials": 1,
+      "reference_reward": 0.9385793268803302,
+      "reward_difference": -0.03219896765684427,
+      "seed": 3102,
+      "utility_difference": -153.71787159377436,
+      "world_sha256": "16103b455ed2419d19cac000f3bc7057636f5170c71a6348d0d0e52907de28d1"
+    },
+    {
+      "model_mean_reward": 0.9448114861525441,
+      "model_stddev_reward": 0.0,
+      "model_trials": 1,
+      "reference_reward": 0.8807984509970977,
+      "reward_difference": -0.06401303515544632,
+      "seed": 3100,
+      "utility_difference": -369.61126498754675,
+      "world_sha256": "292ed00f18c95d2ba4874c61eb038173852a453951cbe4d3c6f20fb64a5f285b"
+    },
+    {
+      "model_mean_reward": 0.87430793864078,
+      "model_stddev_reward": 0.0,
+      "model_trials": 1,
+      "reference_reward": 0.8015359065251487,
+      "reward_difference": -0.07277203211563132,
+      "seed": 3101,
+      "utility_difference": -406.57734343003267,
+      "world_sha256": "3a37b5c022738c6218067fec0a627640e3e8aeb83d3a550dd073a8549e86c8d4"
+    }
+  ],
+  "uncertainty_method": "Average repeats within world, then 10000 percentile-bootstrap resamples of paired worlds; fixed random seed 0. Few-world intervals are descriptive.",
+  "unpaired_worlds": [],
+  "wheel_sha256": "5064bcbd8f6c070262e9f267c8d5b99e5e4b97cc7f4c45b29d569f340b3464a6"
+}

@@ -1,0 +1,29 @@
+{
+  "arguments": [
+    "--regime",
+    "D",
+    "--split",
+    "development",
+    "--candidate",
+    "candidate-d-v1-linux",
+    "--policies",
+    "rolling_horizon_solver,nearest_first,deadline_first,greedy_insertion,stop_early,do_nothing",
+    "--concurrency",
+    "3"
+  ],
+  "image_id": "sha256:b54fd07bd74b27a80db2acddd2023249a8dc5531f5a9c0260cd589b922a1be1d",
+  "native_binary_files_checked": 120,
+  "runtime": {
+    "libc": [
+      "glibc",
+      "2.36"
+    ],
+    "machine": "aarch64",
+    "ortools": "9.15.6755",
+    "python": "3.14.10",
+    "system": "Linux"
+  },
+  "script": "/repo/spikes/dynamic-dispatch-v2/evaluate.py",
+  "source_files_checked": 77,
+  "source_sha256": "b7dc6f2e2b1aabd58bc1b8ef9dff306455f589a3abb34368bd882ea3b46b91bf"
+}
