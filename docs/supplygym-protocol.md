@@ -115,6 +115,10 @@ serialized observations. The existing AST import-isolation tests cover the new
 policy. It has no simulator or grader imports and no random, training, or search
 path. Existing golden-score checks pass.
 
+Final verification completed with 589 tests passed, 9 skipped and 3 existing
+expected failures. Ruff lint and formatting, Pyright, and the Docker API/sidecar
+smoke test also passed.
+
 ## Reproduction
 
 From the repository root, run a single policy comparison through the normal CLI.
