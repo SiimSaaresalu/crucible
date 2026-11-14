@@ -74,7 +74,7 @@ MODE=sidecar GRADE_TOKEN=secret uv run crucible serve            # sidecar mode
 
 # Play a policy against a running server; prints one JSON line.
 uv run crucible play --api http://localhost:8000 --task incident@1 --seed 0 --policy reference
-uv run crucible play --mcp http://localhost:8000/mcp --policy reference   # sidecar
+uv run crucible play --mcp http://localhost:8000/mcp --task incident@1 --policy reference   # sidecar
 curl -H 'x-grade-token: secret' http://localhost:8000/grade
 ```
 
