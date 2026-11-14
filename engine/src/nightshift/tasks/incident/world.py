@@ -12,18 +12,40 @@ from pydantic import BaseModel, ConfigDict
 from nightshift.core.rng import RngStreams
 
 __all__ = [
+    "ALERT_API_ERROR_RATE",
+    "ALERT_API_ERROR_RATE_HOLD",
+    "ALERT_API_LATENCY_HOLD",
+    "ALERT_API_LATENCY_MS",
+    "ALERT_DB_CPU",
+    "ALERT_DB_CPU_HOLD",
+    "ALERT_DB_DISK",
+    "ALERT_DB_DISK_HOLD",
+    "ALERT_DB_WRITE_ERROR_HOLD",
+    "ALERT_DB_WRITE_ERROR_RATE",
+    "API_OVERLOAD_LATENCY_X",
+    "BASE_CPU",
+    "BASE_DISK",
+    "BASE_ERROR_RATE",
+    "BASE_LATENCY_MS",
     "BASE_RPM",
     "CLEAN_DISK_MIN",
     "COLD_CACHE_FACTOR",
     "COLD_CACHE_MIN",
+    "CRASHED_ERROR_RATE",
+    "DB_OVERLOAD_CPU",
+    "DB_OVERLOAD_LATENCY_X",
     "DEMAND_AMPLITUDE",
     "DEMAND_NOISE",
+    "DISK_FULL_ERROR_RATE",
+    "DISK_FULL_PCT",
     "FAULTS",
     "FAULT_KINDS",
     "FAULT_START_RANGE",
     "HERRING_KINDS",
+    "HERRING_LATENCY_X",
     "HERRING_MARGIN",
     "HORIZON",
+    "LATENCY_NOISE_GAIN",
     "LOG_LINES",
     "MAX_INSTANCES",
     "MAX_WAIT",
@@ -38,6 +60,7 @@ __all__ = [
     "SCALE_MIN",
     "SCALE_STEP",
     "SERVICES",
+    "TOPOLOGY_EDGES",
     "Deploy",
     "FaultInfo",
     "Herring",
@@ -92,6 +115,41 @@ OLD_BUG_FACTOR: Final = 0.92  # rolled-back good deploy: service factor until th
 # Scale mitigation: factor f becomes f + min(SCALE_MAX_BONUS, SCALE_STEP * (n - 1)) * (1 - f).
 SCALE_STEP: Final = 0.10
 SCALE_MAX_BONUS: Final = 0.30
+
+# Topology: api calls cache; on a cache miss or cache down, api calls db.
+TOPOLOGY_EDGES: Final[list[tuple[Service, Service]]] = [
+    ("api", "cache"),
+    ("cache", "db"),
+    ("api", "db"),
+]
+
+# Healthy metric baselines (noise from the world is added on top).
+BASE_ERROR_RATE: Final[dict[Service, float]] = {"api": 0.01, "cache": 0.002, "db": 0.002}
+BASE_LATENCY_MS: Final[dict[Service, float]] = {"api": 180.0, "cache": 4.0, "db": 35.0}
+BASE_CPU: Final[dict[Service, float]] = {"api": 0.40, "cache": 0.20, "db": 0.35}
+BASE_DISK: Final[dict[Service, float]] = {"api": 0.30, "cache": 0.10, "db": 0.55}
+LATENCY_NOISE_GAIN: Final = 10.0  # latency = base * (1 + noise * gain)
+
+# Metric shapes while a fault or side effect is active.
+CRASHED_ERROR_RATE: Final = 1.0  # crashed or restarting service
+DB_OVERLOAD_CPU: Final = 0.97
+DB_OVERLOAD_LATENCY_X: Final = 3.0
+API_OVERLOAD_LATENCY_X: Final = 4.0  # api latency while the db is overloaded
+DISK_FULL_PCT: Final = 1.0
+DISK_FULL_ERROR_RATE: Final = 0.6  # db error rate when writes fail
+HERRING_LATENCY_X: Final = 1.5  # small latency blip on the herring service
+
+# Alert rules (metric threshold and `for` hold in minutes, like Prometheus).
+ALERT_API_ERROR_RATE: Final = 0.05
+ALERT_API_ERROR_RATE_HOLD: Final = 2
+ALERT_API_LATENCY_MS: Final = 400.0
+ALERT_API_LATENCY_HOLD: Final = 2
+ALERT_DB_CPU: Final = 0.90
+ALERT_DB_CPU_HOLD: Final = 1
+ALERT_DB_DISK: Final = 0.95
+ALERT_DB_DISK_HOLD: Final = 0
+ALERT_DB_WRITE_ERROR_RATE: Final = 0.10
+ALERT_DB_WRITE_ERROR_HOLD: Final = 1
 
 
 class FaultInfo(BaseModel):
