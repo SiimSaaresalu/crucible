@@ -89,7 +89,7 @@ def test_summarise() -> None:
     assert a.shares["root_cause_correct"] == 0.5
     assert a.shares["env_error"] == 0.0
     assert a.shares["probes_healthy"] is None
-    assert b.mean == 0.0 and b.shares["env_error"] is None
+    assert b.mean == 0.0 and b.shares["env_error"] == 0.0
 
 
 def test_tasks_and_policies() -> None:
@@ -99,3 +99,17 @@ def test_tasks_and_policies() -> None:
     for name in ("reference", "do_nothing", "stop_early", "shotgun"):
         assert name in policies
     assert runner.invoke(app, ["policies", "--task", "nope@1"]).exit_code == 2
+
+
+def test_summarise_env_error_defaults_to_zero_but_other_flags_stay_absent() -> None:
+    results = [_result("p", 0, 1.0, {}), _result("p", 1, 0.5, {"env_error": True})]
+    (row,) = summarise(results, ["p"])
+    assert row.shares["env_error"] == 0.5
+    assert row.shares["root_cause_correct"] is None
+    (clean,) = summarise([_result("q", 0, 1.0, {})], ["q"])
+    assert clean.shares["env_error"] == 0.0
+
+
+def test_eval_clean_run_shows_zero_env_error(tmp_path: Path) -> None:
+    _, output = _eval(tmp_path, "--seeds", "0-1")
+    assert "0.000" in output

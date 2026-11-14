@@ -49,7 +49,10 @@ def summarise(results: Sequence[EpisodeResult], policies: Sequence[str]) -> list
         totals = [r.score.total for r in mine]
         shares: dict[str, float | None] = {}
         for flag in _SHARE_FLAGS:
-            seen = [r.score.flags[flag] for r in mine if flag in r.score.flags]
+            # The episode loop sets `env_error` only on failure, so a clean run has no flag.
+            default = False if flag == "env_error" else None
+            seen = [r.score.flags.get(flag, default) for r in mine]
+            seen = [v for v in seen if v is not None]
             shares[flag] = sum(seen) / len(mine) if seen else None
         rows.append(
             Row(
