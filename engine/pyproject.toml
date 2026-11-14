@@ -7,7 +7,10 @@ authors = [
     { name = "Karl Vaartnou", email = "karl@vaartnou.eu" }
 ]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "pydantic>=2.14.3",
+    "pyyaml>=6.0.3",
+]
 
 [project.scripts]
 nightshift = "nightshift:main"
@@ -24,6 +27,7 @@ dev = [
     "pytest>=9.2.0",
     "pytest-asyncio>=1.5.0",
     "ruff>=0.17.5",
+    "types-pyyaml>=6.0.12.20261113",
 ]
 
 [tool.ruff]
