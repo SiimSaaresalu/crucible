@@ -31,6 +31,19 @@ async def live_sidecar(runs_dir: Path, seed: int, task: str = "incident@1") -> A
         runs_dir=runs_dir,
         log_level="warning",
     )
+    async with _live(settings) as url:
+        yield url
+
+
+@asynccontextmanager
+async def live_api(runs_dir: Path) -> AsyncGenerator[str]:
+    """Yield the base URL of an api-mode server. Always shut it down."""
+    async with _live(Settings(runs_dir=runs_dir, log_level="warning")) as url:
+        yield url
+
+
+@asynccontextmanager
+async def _live(settings: Settings) -> AsyncGenerator[str]:
     port = free_port()
     config = uvicorn.Config(
         create_app(settings), host="127.0.0.1", port=port, log_level="warning", lifespan="on"

@@ -1,6 +1,7 @@
 """The `nightshift` command line: list tasks and policies, run an eval and print a table."""
 
 import asyncio
+import json
 from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
@@ -11,6 +12,7 @@ from pydantic import BaseModel, ConfigDict
 from rich.console import Console
 from rich.table import Table
 
+from nightshift.agents.remote import HttpEpisode, McpEpisode, RemoteOutcome, drive
 from nightshift.core.episode import EpisodeResult
 from nightshift.core.executor import LocalExecutor
 from nightshift.core.jobs import Job, RunSpec, expand, parse_seeds
@@ -182,6 +184,49 @@ def eval_command(
     if any(r.score.flags.get("env_error", False) for r in results):
         typer.echo("Error: at least one episode ended with env_error", err=True)
         raise typer.Exit(1)
+
+
+async def _play(
+    task_ref: str, policy_name: str, mcp: str | None, api: str | None, seed: int | None
+) -> RemoteOutcome:
+    task = get_task(task_ref)
+    policy = get_policy(policy_name, task_ref)
+    if mcp is not None:
+        episode, instruction = await McpEpisode.connect(mcp)
+        return await drive(policy, episode, task.spec, task.tools(), instruction)
+    assert api is not None and seed is not None
+    http, instruction = await HttpEpisode.start(task_ref, seed, base_url=api)
+    return await drive(policy, http, task.spec, task.tools(), instruction, http.first_observation)
+
+
+@app.command("play")
+def play_command(
+    policy: Annotated[str, typer.Option(help="Policy name.")] = "reference",
+    task: Annotated[str, typer.Option(help="Task ref, e.g. incident@1.")] = "incident@1",
+    mcp: Annotated[str | None, typer.Option(help="MCP URL of a sidecar, e.g. .../mcp.")] = None,
+    api: Annotated[str | None, typer.Option(help="Base URL of an API server.")] = None,
+    seed: Annotated[int | None, typer.Option(help="Seed (required with --api).")] = None,
+) -> None:
+    """Play one policy against a running server and print one JSON line."""
+    if (mcp is None) == (api is None):
+        _fail("give exactly one of --mcp and --api")
+    if api is not None and seed is None:
+        _fail("--api needs --seed")
+    if mcp is not None and seed is not None:
+        _fail("--seed only works with --api (a sidecar has its own seed)")
+    try:
+        get_task(task)
+        get_policy(policy, task)
+    except (KeyError, ValueError) as exc:
+        _fail(str(exc.args[0]) if isinstance(exc, KeyError) and exc.args else str(exc))
+    try:
+        outcome = asyncio.run(_play(task, policy, mcp, api, seed))
+    except Exception as exc:
+        _fail(f"cannot play against the server: {type(exc).__name__}: {exc}")
+    line: dict[str, object] = {"steps": outcome.steps, "stop_reason": outcome.stop_reason}
+    if api is not None:  # a sidecar grades only with its token, which the agent does not have
+        line["score"] = outcome.score.total
+    typer.echo(json.dumps(line))
 
 
 @app.command("serve")
