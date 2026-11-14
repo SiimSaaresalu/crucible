@@ -60,7 +60,7 @@ async def test_healthz(client: httpx.AsyncClient) -> None:
 
 async def test_tasks(client: httpx.AsyncClient) -> None:
     r = await client.get("/v1/tasks")
-    assert r.json() == ["guess@1", "incident@1"]
+    assert r.json() == ["backend_probe@1", "fleetbase_dispatch@1", "guess@1", "incident@1"]
 
 
 async def test_tools_have_schemas(client: httpx.AsyncClient) -> None:
