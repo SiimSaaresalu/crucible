@@ -10,7 +10,9 @@ from nightshift.core.tools import Observation, ToolCall, ToolResult, ToolSpec
 class MinimalTask(Task):
     spec = TaskSpec(id="min", version=3, max_steps=5, title="t", description="d")
 
-    async def reset(self, seed: int, difficulty: int = 0) -> Observation:
+    async def reset(
+        self, seed: int, difficulty: int = 0, *, salt: str | None = None
+    ) -> Observation:
         return Observation(text=f"{seed}/{difficulty}")
 
     def tools(self) -> list[ToolSpec]:

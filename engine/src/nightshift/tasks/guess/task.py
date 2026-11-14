@@ -76,8 +76,10 @@ class GuessNumber(Task):
         self._solved = False
         self._gave_up = False
 
-    async def reset(self, seed: int, difficulty: int = 0) -> Observation:
-        self._hidden = _Hidden(target=RngStreams(seed).exogenous.randint(LOW, HIGH))
+    async def reset(
+        self, seed: int, difficulty: int = 0, *, salt: str | None = None
+    ) -> Observation:
+        self._hidden = _Hidden(target=RngStreams(seed, salt).exogenous.randint(LOW, HIGH))
         self._guesses = 0
         self._solved = False
         self._gave_up = False
@@ -107,6 +109,12 @@ class GuessNumber(Task):
 
     def done(self) -> bool:
         return self._solved or self._gave_up
+
+    def hidden_strings(self) -> frozenset[str]:
+        return frozenset() if self._hidden is None else frozenset({str(self._hidden.target)})
+
+    def solved(self, score: Score) -> bool:
+        return score.flags.get("solved", False)
 
     async def grade(self) -> Score:
         total = 1 - (self._guesses - 1) / self.spec.max_steps if self._solved else 0.0

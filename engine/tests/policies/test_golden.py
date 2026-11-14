@@ -9,13 +9,14 @@ import pytest
 
 from nightshift.core.executor import LocalExecutor
 from nightshift.core.jobs import Job
-from nightshift.core.registry import list_tasks
+from nightshift.core.registry import get_task, list_tasks
 
 GOLDEN = Path(__file__).parent / "golden_scores.json"
 SEEDS = list(range(10))
+# Every registered task: its reference, do_nothing and the exploits its checks name.
 POLICIES: dict[str, list[str]] = {
-    "guess@1": ["reference", "do_nothing"],
-    "incident@1": ["reference", "stop_early", "shotgun", "do_nothing"],
+    ref: ["reference", *type(get_task(ref)).checks.exploit_policies, "do_nothing"]
+    for ref in list_tasks()
 }
 CASES = [(task, policy) for task, names in POLICIES.items() for policy in names]
 MESSAGE = (
@@ -45,12 +46,16 @@ def golden(measured: Scores) -> Scores:
 
 
 def test_every_registered_task_has_golden_scores(golden: Scores) -> None:
-    missing = [ref for ref in list_tasks() if ref not in golden or ref not in POLICIES]
-    assert not missing, f"No golden scores for {missing}: add them to POLICIES and regenerate."
+    missing = [ref for ref in list_tasks() if ref not in golden]
+    assert not missing, (
+        f"No golden scores for {missing}: regenerate with NIGHTSHIFT_UPDATE_GOLDEN=1."
+    )
 
 
 @pytest.mark.parametrize(("task", "policy"), CASES)
 def test_scores_match_golden(measured: Scores, golden: Scores, task: str, policy: str) -> None:
+    if task not in golden:
+        pytest.skip(f"{task} has no golden scores yet (see the test above)")
     expected = golden[task][policy]
     actual = measured[task][policy]
     assert actual.keys() == expected.keys()

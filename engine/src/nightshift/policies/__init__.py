@@ -1,6 +1,5 @@
 """Built-in policies. Importing a module registers its policies."""
 
-from nightshift.policies import baselines, incident_baselines
-from nightshift.policies.reference import guess
+from nightshift.policies import baselines, incident_baselines, reference
 
-__all__ = ["baselines", "guess", "incident_baselines"]
+__all__ = ["baselines", "incident_baselines", "reference"]
