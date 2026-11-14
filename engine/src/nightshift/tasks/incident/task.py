@@ -377,7 +377,8 @@ Time: you start at minute 0 and the episode ends at minute {HORIZON}. Read tools
 {READ_MIN} minute each. Actions take their stated time: restart {RESTART_MIN}, rollback \
 {ROLLBACK_MIN}, clean_disk {CLEAN_DISK_MIN}, scale {SCALE_MIN}. `wait` takes 1 to {MAX_WAIT} \
 minutes and stops early when a new alert fires. You have {MAX_STEPS} tool calls. Calls with \
-invalid arguments are refused and cost nothing.
+invalid arguments are refused and take no simulated time, but still count toward the \
+{MAX_STEPS} calls.
 
 Tools:
 - get_topology, get_alerts, list_deploys: read the service graph, firing alerts, deploy history.
