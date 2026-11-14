@@ -18,6 +18,7 @@ from crucible.export.harbor import build_engine_artifacts, export_harbor
 ROOT = Path(__file__).resolve().parents[2]
 MODEL = os.environ.get("LAST_SIDING_MODEL", "google/gemini-3.8-flash")
 RUN_NAME = {
+    "google/gemini-4-hydrogen": "last-siding-hydrogen",
     "google/gemini-3.8-flash": "last-siding-judge",
     "google/gemma-4-31b-it": "last-siding-gemma-4-31b",
     "google/gemma-4-26b-a4b-it": "last-siding-gemma-4-26b",
