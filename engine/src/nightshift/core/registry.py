@@ -131,12 +131,20 @@ def get_policy(name: str, task_ref: str) -> Policy:
     return factory()
 
 
+def list_policies(task_ref: str) -> list[str]:
+    """Sorted names `get_policy` accepts for this task (task-specific and task-agnostic)."""
+    task_id, _ = _split_ref(task_ref)
+    _load_builtins()
+    return sorted({n for (n, t) in _policies if t is None or t == task_id})
+
+
 __all__ = [
     "PolicyFactory",
     "UnknownPolicyError",
     "UnknownTaskError",
     "get_policy",
     "get_task",
+    "list_policies",
     "list_tasks",
     "register_policy",
     "register_task",
