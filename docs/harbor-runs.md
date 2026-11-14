@@ -1,6 +1,6 @@
 # Harbor runs
 
-Runs of the generated `incident@1` tasks (`nightshift export harbor --seeds 0-9`) on a laptop with local Docker. Harbor 0.26.0, OpenCode 1.19.5. The job folders are in `jobs/` (gitignored); this file keeps the scores.
+Runs of the generated `incident@1` tasks (`nightshift export harbor --task incident@1 --seeds 0-9`) on a laptop with local Docker. Harbor 0.26.0, OpenCode 1.19.5. The job folders are in `jobs/` (gitignored); this file keeps the scores.
 
 Date: 2026-11-14. Engine commit: `44f0dca` plus the step 7 export.
 
