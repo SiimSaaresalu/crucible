@@ -1,37 +1,64 @@
 # Crucible
 
-Interactive agent environments: a simulator and a grader, written one time, give MCP tools, seeded variants, baselines and exploit tests, and one command exports the tasks to Harbor.
+Crucible turns a simulator and a grader into an agent environment.
+You write them once; Crucible gives you MCP tools, seeded variants, baselines, exploit tests and a Harbor export.
 
-- `engine/`: the Python engine, CLI and server. See [engine/README.md](engine/README.md).
-- `engine/src/crucible/envs/<name>/`: one folder per environment, with its policies, tests and a `README.md` card. Other packages can add environments through the `crucible.envs` entry point.
-- `docs/decisions.md`: design decisions. `docs/harbor-runs.md`: Harbor run scores.
+## Featured environment: `incident@1`
+
+Our Junction 2026 AfterQuery submission is `incident@1`, an on-call incident.
+A small web service (`api -> cache -> db`) runs for 120 simulated minutes, and one fault starts between minute 15 and 45.
+The agent reads alerts, metrics, logs and deploys, repairs the fault and closes the incident with a root cause.
+Every read costs a simulated minute while requests fail, so the reward is mostly set by how soon the right repair starts.
+Noise alerts and unrelated deploys make a fast guess risky: a wrong repair is a penalty.
+
+| Policy or agent | Where | Seeds | Mean reward | Root cause correct |
+|---|---|---|---|---|
+| `reference` (runbook policy) | in process | 0–99 | 0.968 | 100% |
+| oracle (`solve.sh` plays `reference`) | Harbor | 0–9 | 0.971 | 10/10 |
+| OpenCode 1.19.5 + `google/gemini-3.8-flash` | Harbor | 0–2 | 0.955 | 3/3 |
+| `shotgun` (tries every repair) | in process | 0–99 | 0.012 | 38% |
+| `stop_early` (guesses after two reads) | in process | 0–99 | 0.000 | 38% |
+| `do_nothing` / Harbor `nop` | both | 0–99 / 0–2 | 0.000 | 0% |
+
+Environment card: [engine/src/crucible/envs/incident/README.md](engine/src/crucible/envs/incident/README.md).
+Harbor run details: [docs/harbor-runs.md](docs/harbor-runs.md).
+
+## Quickstart
+
+You need [uv](https://docs.astral.sh/uv/). This runs the small `guess@1` environment in process:
+
+```bash
+uv run --directory engine crucible tasks
+```
+
+```bash
+uv run --directory engine crucible eval --task guess@1 --policy reference,do_nothing --seeds 0-9
+```
+
+The reference (binary search) scores 0.530 on average; `do_nothing` scores 0.000.
+Each run writes a transcript per episode and a `summary.csv` under `engine/runs/`.
+
+Next steps:
+
+- [docs/concepts.md](docs/concepts.md): the words we use.
+- [docs/using-environments.md](docs/using-environments.md): run, serve, export and Harbor.
+- [docs/adding-an-environment.md](docs/adding-an-environment.md): write your own.
+- [docs/scoring.md](docs/scoring.md) and [docs/reward-integrity.md](docs/reward-integrity.md): how rewards are built and protected.
+- [docs/decisions.md](docs/decisions.md): every design decision, with the reason.
 
 ## Pinned versions
 
-| Tool | Version |
-|---|---|
-| Harbor | 0.26.0 |
-| OpenCode | 1.19.5 (`--ak version=1.19.5`) |
-| Python | 3.14 |
-| uv | 0.12.18 |
+| Tool | Version | Link |
+|---|---|---|
+| Harbor | 0.26.0 | [laude-institute/harbor](https://github.com/laude-institute/harbor) |
+| OpenCode | 1.19.5 (`--ak version=1.19.5`) | [opencode.ai](https://opencode.ai) |
+| Python | 3.14 | [python.org](https://www.python.org) |
+| uv | 0.12.18 | [docs.astral.sh/uv](https://docs.astral.sh/uv/) |
+| MCP Python SDK | 2.x (`mcp>=2.3.0`) | [modelcontextprotocol.io](https://modelcontextprotocol.io) |
 
-## Run the Harbor tasks
+## Layout
 
-```bash
-uv run --directory engine crucible export harbor --task incident@1 --seeds 0-9 --out ../harbor/incident-1
-harbor run -p harbor/incident-1 -a oracle -o jobs
-```
-
-OpenCode needs `GOOGLE_GENERATIVE_AI_API_KEY` (in `.env`):
-
-```bash
-set -a; . ./.env; set +a
-harbor run -p harbor/incident-1 -a opencode -m google/gemini-3.8-flash \
-  --ak version=1.19.5 --ak disable_web_search=true \
-  --api-key-name GOOGLE_GENERATIVE_AI_API_KEY \
-  --ae GOOGLE_GENERATIVE_AI_API_KEY=$GOOGLE_GENERATIVE_AI_API_KEY -o jobs
-```
-
-On macOS with Docker Desktop, `docker` may not be on `PATH`: `export PATH=$PATH:/Applications/Docker.app/Contents/Resources/bin`.
-
-The sidecar build installs the engine wheel and its requirements from PyPI, so the build needs internet.
+- `engine/`: the Python package `crucible` (core, server, export, CLI). See [engine/README.md](engine/README.md).
+- `engine/src/crucible/envs/<name>/`: one folder per environment, with its policies, tests and card.
+- `docs/`: these docs, the decision log and the Harbor run log.
+- `spikes/hello-mcp-ns/`: the first MCP-in-Harbor spike.
