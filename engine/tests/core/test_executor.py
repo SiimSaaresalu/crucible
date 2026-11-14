@@ -93,7 +93,9 @@ class _Flaky(Task):
     error: ClassVar[type[Exception]] = InfraError
     attempts: ClassVar[dict[int, int]] = {}
 
-    async def reset(self, seed: int, difficulty: int = 0) -> Observation:
+    async def reset(
+        self, seed: int, difficulty: int = 0, *, salt: str | None = None
+    ) -> Observation:
         count = self.attempts.get(seed, 0) + 1
         self.attempts[seed] = count
         if count <= self.fail_times:

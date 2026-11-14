@@ -59,6 +59,7 @@ uv run crucible eval --task incident@1 --policy reference --seeds 0-9
 | `GRADE_TOKEN` | empty | required in sidecar mode; the `x-grade-token` header for `/grade` |
 | `SIDECAR_TASK` | `incident@1` | task served in sidecar mode |
 | `SIDECAR_SEED` | `0` | seed served in sidecar mode |
+| `SIDECAR_SALT` | unset | secret mixed into the world RNG (set per task by `export harbor`) |
 
 Two modes:
 
@@ -98,9 +99,31 @@ uv run crucible export harbor ... --solution-policy stop_early   # oracle plays 
 uv run crucible export harbor ... --force                        # replace a non-empty --out
 ```
 
-Each task gets a new grade token on every export. The token is only in `[verifier.env]` and the
-sidecar's environment, so do not commit the output (`harbor/` is gitignored). The verifier
+Each task gets a new grade token and a new world salt on every export. The token is only in
+`[verifier.env]` and the sidecar's environment; the salt (`SIDECAR_SALT`) is only in the sidecar's
+environment, so the world cannot be rebuilt from the seed in the folder name. Do not commit the
+output (`harbor/` is gitignored). Because of the salt, a Harbor score is not the in-process score
+for the same seed; in-process runs (`eval`, the API) use no salt, so golden scores do not move.
+
+`task.toml` takes the task's `title`, `description` and `keywords` from its `TaskSpec`, and its
+resources when set: `cpus`, `memory_mb`, `timeout_sec` (the agent timeout) and `docker_image` (a
+prebuilt image for the agent's container; Harbor still builds `environment/Dockerfile` with
+`--force-build`). Unset resources keep 1 CPU, 2048 MB and 900 s. The verifier
 writes `reward.txt`, `grade.json` (breakdown, flags, steps, stop reason) and `transcript.json`
 to `/logs/verifier/`.
+
+## New environment
+
+```sh
+uv run crucible new-env triage
+uv run pytest tests/generic src/crucible/envs/triage
+CRUCIBLE_UPDATE_GOLDEN=1 uv run pytest tests/policies/test_golden.py   # pin its scores
+```
+
+`new-env` copies `guess@1` into `src/crucible/envs/<name>/` (task, `policies/reference.py`,
+`tests/`, a `README.md` card) and adds a `crucible.envs` entry point to `pyproject.toml`. The
+next `uv run` reinstalls the project, so the registry finds the new environment. The copy passes
+the generic checks as it is; change the game from there, keeping `hidden_strings()`, `solved()`
+and `checks` up to date.
 
 Tests: see [tests/README.md](tests/README.md).

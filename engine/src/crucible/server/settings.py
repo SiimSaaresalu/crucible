@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     grade_token: str = ""
     sidecar_task: str = "incident@1"
     sidecar_seed: int = 0
+    sidecar_salt: str | None = None
 
 
 __all__ = ["Settings"]

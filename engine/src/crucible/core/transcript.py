@@ -36,6 +36,7 @@ class Header(BaseModel):
     job_id: str
     git_commit: str
     started_at: str
+    salted: bool = False
 
 
 class StepRecord(BaseModel):
@@ -116,8 +117,17 @@ class TranscriptWriter:
         self._file.write(record.model_dump_json() + "\n")
 
     def header(
-        self, *, task: str, scoring_hash: str, policy: str, seed: int, repeat: int, job_id: str
+        self,
+        *,
+        task: str,
+        scoring_hash: str,
+        policy: str,
+        seed: int,
+        repeat: int,
+        job_id: str,
+        salted: bool = False,
     ) -> None:
+        """Write the header. `salted`: the world used a secret salt (never written)."""
         self._write(
             Header(
                 task=task,
@@ -128,6 +138,7 @@ class TranscriptWriter:
                 job_id=job_id,
                 git_commit=git_commit(),
                 started_at=now(),
+                salted=salted,
             )
         )
 

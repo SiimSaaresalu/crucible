@@ -288,6 +288,30 @@ def export_harbor_command(
     typer.echo(f"Run: harbor run -p {out} -a oracle")
 
 
+@app.command("new-env")
+def new_env_command(
+    name: Annotated[str, typer.Argument(help="Task id of the new environment, e.g. 'triage'.")],
+    root: Annotated[
+        Path | None, typer.Option(help="Engine folder to write into (default: this checkout).")
+    ] = None,
+) -> None:
+    """Start a new environment as a copy of guess@1, with a reference policy and tests."""
+    from crucible.scaffold import ScaffoldError, engine_root, new_env
+
+    try:
+        written = new_env(name, root if root is not None else engine_root())
+    except (ScaffoldError, OSError) as exc:
+        _fail(str(exc))
+    for path in written:
+        typer.echo(path)
+    typer.echo(
+        f"Registered {name}@1. Check it: uv run pytest tests/generic src/crucible/envs/{name}"
+    )
+    typer.echo(
+        "Pin its scores: CRUCIBLE_UPDATE_GOLDEN=1 uv run pytest tests/policies/test_golden.py"
+    )
+
+
 @app.command("serve")
 def serve_command() -> None:
     """Serve the HTTP API (settings come from the environment)."""
