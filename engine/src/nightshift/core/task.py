@@ -3,20 +3,30 @@
 from abc import ABC, abstractmethod
 from typing import ClassVar
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from nightshift.core.scoring import Score
 from nightshift.core.tools import Observation, ToolCall, ToolResult, ToolSpec
 
 
 class TaskSpec(BaseModel):
-    """Static identity of a task."""
+    """Static identity of a task, plus the metadata exports show (title, description, keywords)."""
 
     model_config = ConfigDict(frozen=True)
 
     id: str
     version: int
     max_steps: int
+    title: str = Field(min_length=1, pattern=r"^[^\r\n]+$")
+    description: str = Field(min_length=1)
+    keywords: tuple[str, ...] = ()
+
+    @field_validator("keywords")
+    @classmethod
+    def _keywords_not_blank(cls, value: tuple[str, ...]) -> tuple[str, ...]:
+        if any(not k.strip() for k in value):
+            raise ValueError("keywords must not be blank")
+        return value
 
     @property
     def ref(self) -> str:

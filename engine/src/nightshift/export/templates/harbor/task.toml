@@ -2,9 +2,9 @@ schema_version = "1.1"
 
 [task]
 name = "@@TASK_NAME@@"
-description = "Night Shift Gym @@TASK_REF@@, seed @@SEED@@: on-call incident response over MCP tools."
+description = @@DESCRIPTION@@
 authors = []
-keywords = ["nightshift", "incident-response", "mcp", "interactive"]
+keywords = @@KEYWORDS@@
 
 [metadata]
 task_ref = "@@TASK_REF@@"

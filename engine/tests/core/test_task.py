@@ -1,13 +1,14 @@
 import pytest
 
 from nightshift.core.policy import Policy
+from nightshift.core.registry import get_task, list_tasks
 from nightshift.core.scoring import Score
 from nightshift.core.task import Task, TaskSpec
 from nightshift.core.tools import Observation, ToolCall, ToolResult, ToolSpec
 
 
 class MinimalTask(Task):
-    spec = TaskSpec(id="min", version=3, max_steps=5)
+    spec = TaskSpec(id="min", version=3, max_steps=5, title="t", description="d")
 
     async def reset(self, seed: int, difficulty: int = 0) -> Observation:
         return Observation(text=f"{seed}/{difficulty}")
@@ -39,11 +40,13 @@ class StopPolicy:
 
 
 def test_ref() -> None:
-    assert TaskSpec(id="guess", version=2, max_steps=10).ref == "guess@2"
+    assert (
+        TaskSpec(id="guess", version=2, max_steps=10, title="t", description="d").ref == "guess@2"
+    )
 
 
 def test_spec_is_frozen() -> None:
-    spec = TaskSpec(id="a", version=1, max_steps=1)
+    spec = TaskSpec(id="a", version=1, max_steps=1, title="t", description="d")
     with pytest.raises(ValueError):
         spec.version = 2
 
@@ -64,3 +67,20 @@ async def test_minimal_task_and_policy() -> None:
     policy: Policy = StopPolicy()
     await policy.reset(task.spec, task.tools(), task.instruction())
     assert await policy.act(obs) is None
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [{"title": ""}, {"title": "two\nlines"}, {"description": ""}, {"keywords": ("ok", " ")}],
+)
+def test_spec_metadata_is_validated(bad: dict[str, object]) -> None:
+    fields: dict[str, object] = {"id": "a", "version": 1, "max_steps": 1, "title": "t"}
+    fields["description"] = "d"
+    with pytest.raises(ValueError):
+        TaskSpec.model_validate({**fields, **bad})
+
+
+def test_every_registered_task_has_metadata() -> None:
+    for ref in list_tasks():
+        spec = get_task(ref).spec
+        assert spec.title.strip() and spec.description.strip(), ref

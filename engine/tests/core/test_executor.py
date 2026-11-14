@@ -86,7 +86,9 @@ async def test_duplicate_jobs_rejected(tmp_path: Path) -> None:
 class _Flaky(Task):
     """Raises on reset until it has been tried `fail_times` times, per seed."""
 
-    spec: ClassVar[TaskSpec] = TaskSpec(id="flaky", version=1, max_steps=1)
+    spec: ClassVar[TaskSpec] = TaskSpec(
+        id="flaky", version=1, max_steps=1, title="t", description="d"
+    )
     fail_times: ClassVar[int] = 0
     error: ClassVar[type[Exception]] = InfraError
     attempts: ClassVar[dict[int, int]] = {}

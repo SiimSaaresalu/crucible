@@ -200,7 +200,14 @@ def _fail(message: str) -> ToolResult:
 class IncidentTask(Task):
     """Diagnose and repair a simulated outage within 120 simulated minutes."""
 
-    spec: ClassVar[TaskSpec] = TaskSpec(id="incident", version=1, max_steps=MAX_STEPS)
+    spec: ClassVar[TaskSpec] = TaskSpec(
+        id="incident",
+        version=1,
+        max_steps=MAX_STEPS,
+        title="Night Shift: on-call incident",
+        description="On-call incident response: find the root cause of an outage and repair it.",
+        keywords=("incident-response",),
+    )
     scoring_hash: ClassVar[str] = SCORING_HASH
 
     def __init__(self) -> None:

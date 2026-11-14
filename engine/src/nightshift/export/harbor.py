@@ -19,6 +19,7 @@ from pathlib import Path
 from pydantic import BaseModel, ConfigDict
 
 from nightshift.core.registry import get_task
+from nightshift.core.task import TaskSpec
 
 __all__ = [
     "UV_VERSION",
@@ -32,6 +33,7 @@ __all__ = [
 UV_VERSION = "0.12.18"
 _PLACEHOLDER = re.compile(r"@@([A-Z_]+)@@")
 _EXECUTABLE = {"solution/solve.sh", "tests/test.sh"}
+_EXPORT_KEYWORDS = ("nightshift", "mcp", "interactive")
 
 
 class ExportError(Exception):
@@ -119,6 +121,16 @@ def _render(text: str, values: dict[str, str]) -> str:
     return _PLACEHOLDER.sub(replace, text)
 
 
+def _toml_str(text: str) -> str:
+    """A TOML basic string. JSON string escapes are a subset of TOML's."""
+    return json.dumps(text, ensure_ascii=False)
+
+
+def _keywords(spec: TaskSpec) -> list[str]:
+    """Export keywords first, then the task's own, without repeats."""
+    return list(dict.fromkeys((*_EXPORT_KEYWORDS, *spec.keywords)))
+
+
 def _git_commit() -> str:
     try:
         done = subprocess.run(
@@ -164,8 +176,10 @@ def export_harbor(
     if len(set(seeds)) != len(seeds):
         raise ExportError("seeds repeat")
     task = get_task(task_ref)
-    ref = task.spec.ref
+    spec = task.spec
+    ref = spec.ref
     instruction = task.instruction().strip()
+    keywords = "[" + ", ".join(_toml_str(k) for k in _keywords(spec)) + "]"
     commit = git_commit if git_commit is not None else _git_commit()
     wheel_bytes = artifacts.wheel.read_bytes()
     engine_version = artifacts.wheel.name.split("-")[1]
@@ -179,6 +193,9 @@ def export_harbor(
             "TASK_NAME": f"nightshift/{task_folder_name(ref, seed)}",
             "TASK_REF": ref,
             "SEED": str(seed),
+            "TITLE": spec.title,
+            "DESCRIPTION": _toml_str(f"{spec.description.strip()} ({ref}, seed {seed})"),
+            "KEYWORDS": keywords,
             "ENGINE_VERSION": engine_version,
             "GIT_COMMIT": commit,
             "GRADE_TOKEN": token_factory(),

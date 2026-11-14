@@ -10,13 +10,15 @@ import yaml
 from typer.testing import CliRunner
 
 from nightshift.cli import app
-from nightshift.core.registry import get_task
+from nightshift.core import registry
+from nightshift.core.registry import get_task, register_task
 from nightshift.export.harbor import (
     EngineArtifacts,
     ExportError,
     export_harbor,
     task_folder_name,
 )
+from nightshift.tasks.guess.task import GuessNumber
 
 WHEEL = "nightshift-0.1.0-py3-none-any.whl"
 FILES = {
@@ -48,10 +50,16 @@ def _tokens() -> itertools.count[int]:
     return itertools.count()
 
 
-def _export(out: Path, artifacts: EngineArtifacts, seeds: list[int], **kw: object) -> list[Path]:
+def _export(
+    out: Path,
+    artifacts: EngineArtifacts,
+    seeds: list[int],
+    task_ref: str = "incident@1",
+    **kw: object,
+) -> list[Path]:
     counter = _tokens()
     return export_harbor(
-        "incident@1",
+        task_ref,
         seeds,
         out,
         artifacts,
@@ -112,6 +120,51 @@ def test_task_toml_and_compose(tmp_path: Path, artifacts: EngineArtifacts) -> No
     assert env["SIDECAR_SEED"] == "5"
     assert env["GRADE_TOKEN"] == _token(folder)
     assert "environment" not in compose["services"]["main"]
+
+
+@pytest.mark.parametrize("task_ref", ["incident@1", "guess@1"])
+def test_metadata_comes_from_the_spec(
+    tmp_path: Path, artifacts: EngineArtifacts, task_ref: str
+) -> None:
+    spec = get_task(task_ref).spec
+    (folder,) = _export(tmp_path / "out", artifacts, [4], task_ref)
+    task = tomllib.loads((folder / "task.toml").read_text())["task"]
+    assert task["description"] == f"{spec.description} ({spec.ref}, seed 4)"
+    assert task["keywords"][:3] == ["nightshift", "mcp", "interactive"]
+    assert set(spec.keywords) <= set(task["keywords"])
+    assert len(set(task["keywords"])) == len(task["keywords"])
+    instruction = (folder / "instruction.md").read_text()
+    assert instruction.splitlines()[0] == f"# {spec.title}"
+
+
+def test_guess_export_has_no_incident_wording(tmp_path: Path, artifacts: EngineArtifacts) -> None:
+    (folder,) = _export(tmp_path / "out", artifacts, [0], "guess@1")
+    for rel in FILES:
+        if rel.endswith(".whl"):
+            continue
+        text = (folder / rel).read_text().lower()
+        for word in ("incident", "on-call", "outage", "root cause"):
+            assert word not in text, (rel, word)
+
+
+def test_metadata_is_escaped_for_toml(tmp_path: Path, artifacts: EngineArtifacts) -> None:
+    class Quoted(GuessNumber):
+        spec = GuessNumber.spec.model_copy(
+            update={
+                "id": "quoted",
+                "title": 'A "quoted" title',
+                "description": 'Say "hi"\\ then\nstop.',
+                "keywords": ('kw "1"', "mcp"),
+            }
+        )
+
+    with registry._reset_for_tests():  # pyright: ignore[reportPrivateUsage]
+        register_task(Quoted)
+        (folder,) = _export(tmp_path / "out", artifacts, [0], "quoted@1")
+    task = tomllib.loads((folder / "task.toml").read_text())["task"]
+    assert task["description"] == 'Say "hi"\\ then\nstop. (quoted@1, seed 0)'
+    assert task["keywords"] == ["nightshift", "mcp", "interactive", 'kw "1"']
+    assert (folder / "instruction.md").read_text().startswith('# A "quoted" title\n')
 
 
 def test_tokens_stay_with_sidecar_and_verifier(tmp_path: Path, artifacts: EngineArtifacts) -> None:
