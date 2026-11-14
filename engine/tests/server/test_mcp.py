@@ -9,11 +9,11 @@ import pytest
 from mcp import Client
 from mcp.types import CallToolResult
 
-from nightshift.agents.remote import McpEpisode, drive, fetch_grade
-from nightshift.core.executor import LocalExecutor
-from nightshift.core.jobs import Job
-from nightshift.core.registry import get_policy, get_task
-from nightshift.core.tools import Observation, ToolCall
+from crucible.agents.remote import McpEpisode, drive, fetch_grade
+from crucible.core.executor import LocalExecutor
+from crucible.core.jobs import Job
+from crucible.core.registry import get_policy, get_task
+from crucible.core.tools import Observation, ToolCall
 from tests.server.live import TOKEN, live_sidecar
 
 TASK = "incident@1"

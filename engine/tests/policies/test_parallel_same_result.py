@@ -2,9 +2,9 @@
 
 from pathlib import Path
 
-from nightshift.core.executor import LocalExecutor
-from nightshift.core.jobs import RunSpec, expand
-from nightshift.core.transcript import TIME_FIELDS, read_transcript
+from crucible.core.executor import LocalExecutor
+from crucible.core.jobs import RunSpec, expand
+from crucible.core.transcript import TIME_FIELDS, read_transcript
 
 POLICIES = ["reference", "do_nothing", "stop_early", "shotgun"]
 JOBS = [

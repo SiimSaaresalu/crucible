@@ -1,7 +1,7 @@
 [project]
-name = "nightshift"
+name = "crucible"
 version = "0.1.0"
-description = "Add your description here"
+description = "Deterministic interactive agent environments with MCP tools and Harbor export"
 readme = "README.md"
 authors = [
     { name = "Karl Vaartnou", email = "karl@vaartnou.eu" }
@@ -19,11 +19,21 @@ dependencies = [
 ]
 
 [project.scripts]
-nightshift = "nightshift:main"
+crucible = "crucible:main"
+
+# Environments. A plugin package registers its own under the same group.
+[project.entry-points."crucible.envs"]
+guess = "crucible.envs.guess"
+incident = "crucible.envs.incident"
 
 [build-system]
 requires = ["uv_build>=0.12.18,<0.13.0"]
 build-backend = "uv_build"
+
+# Environment tests live next to each environment but stay out of the wheel (and so out of the
+# Harbor sidecar and solution).
+[tool.uv.build-backend]
+wheel-exclude = ["crucible/envs/*/tests"]
 
 [dependency-groups]
 dev = [
@@ -53,4 +63,4 @@ venv = ".venv"
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
-testpaths = ["tests"]
+testpaths = ["tests", "src/crucible/envs"]

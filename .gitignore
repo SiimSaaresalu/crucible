@@ -11,5 +11,5 @@ runs/
 /build*.md
 dist/
 
-# Generated Harbor task folders (they hold grade tokens); regenerate with `nightshift export harbor`
+# Generated Harbor task folders (they hold grade tokens); regenerate with `crucible export harbor`
 /harbor/

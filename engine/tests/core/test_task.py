@@ -1,10 +1,10 @@
 import pytest
 
-from nightshift.core.policy import Policy
-from nightshift.core.registry import get_task, list_tasks
-from nightshift.core.scoring import Score
-from nightshift.core.task import Task, TaskSpec
-from nightshift.core.tools import Observation, ToolCall, ToolResult, ToolSpec
+from crucible.core.policy import Policy
+from crucible.core.registry import get_task, list_tasks
+from crucible.core.scoring import Score
+from crucible.core.task import Task, TaskSpec
+from crucible.core.tools import Observation, ToolCall, ToolResult, ToolSpec
 
 
 class MinimalTask(Task):

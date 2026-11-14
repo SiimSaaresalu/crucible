@@ -5,14 +5,14 @@ from pathlib import Path
 import httpx
 import pytest
 
-from nightshift.agents.remote import HttpEpisode, drive
-from nightshift.core.executor import LocalExecutor
-from nightshift.core.jobs import Job
-from nightshift.core.policy import Policy
-from nightshift.core.registry import get_policy, get_task
-from nightshift.core.transcript import TIME_FIELDS, read_transcript
-from nightshift.server.app import create_app
-from nightshift.server.settings import Settings
+from crucible.agents.remote import HttpEpisode, drive
+from crucible.core.executor import LocalExecutor
+from crucible.core.jobs import Job
+from crucible.core.policy import Policy
+from crucible.core.registry import get_policy, get_task
+from crucible.core.transcript import TIME_FIELDS, read_transcript
+from crucible.server.app import create_app
+from crucible.server.settings import Settings
 
 TASK = "incident@1"
 POLICIES = ["reference", "do_nothing", "stop_early", "shotgun"]

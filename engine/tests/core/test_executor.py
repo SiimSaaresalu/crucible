@@ -5,16 +5,16 @@ from typing import ClassVar
 
 import pytest
 
-from nightshift.core import registry
-from nightshift.core.episode import EpisodeResult, InfraError
-from nightshift.core.executor import Executor, LocalExecutor
-from nightshift.core.jobs import Job, RunSpec, expand
-from nightshift.core.registry import register_policy, register_task
-from nightshift.core.scoring import Score
-from nightshift.core.task import Task, TaskSpec
-from nightshift.core.tools import Observation, ToolCall, ToolResult, ToolSpec
-from nightshift.core.transcript import TIME_FIELDS, read_transcript
-from nightshift.policies.baselines import DoNothing
+from crucible.core import registry
+from crucible.core.episode import EpisodeResult, InfraError
+from crucible.core.executor import Executor, LocalExecutor
+from crucible.core.jobs import Job, RunSpec, expand
+from crucible.core.registry import register_policy, register_task
+from crucible.core.scoring import Score
+from crucible.core.task import Task, TaskSpec
+from crucible.core.tools import Observation, ToolCall, ToolResult, ToolSpec
+from crucible.core.transcript import TIME_FIELDS, read_transcript
+from crucible.policies.baselines import DoNothing
 
 GUESS_JOBS = expand(RunSpec(task="guess", policy="reference", seeds=list(range(12)), repeats=2))
 

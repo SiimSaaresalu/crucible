@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from nightshift.core.jobs import Job
-from nightshift.core.registry import get_task
-from nightshift.core.session import EpisodeSession
-from nightshift.core.transcript import TranscriptWriter, read_transcript
+from crucible.core.jobs import Job
+from crucible.core.registry import get_task
+from crucible.core.session import EpisodeSession
+from crucible.core.transcript import TranscriptWriter, read_transcript
 from tests.core.helpers import guess_call
 
 

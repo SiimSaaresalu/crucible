@@ -3,10 +3,10 @@ from pathlib import Path
 
 import pytest
 
-from nightshift.core.rng import RngStreams
-from nightshift.core.scoring import Score
-from nightshift.core.tools import ToolCall, ToolResult
-from nightshift.core.transcript import (
+from crucible.core.rng import RngStreams
+from crucible.core.scoring import Score
+from crucible.core.tools import ToolCall, ToolResult
+from crucible.core.transcript import (
     TranscriptWriter,
     git_commit,
     read_transcript,
@@ -72,10 +72,10 @@ def test_read_rejects_incomplete_file(tmp_path: Path) -> None:
 
 def test_git_commit_env_override(monkeypatch: pytest.MonkeyPatch) -> None:
     git_commit.cache_clear()
-    monkeypatch.setenv("NIGHTSHIFT_GIT_COMMIT", "deadbeef")
+    monkeypatch.setenv("CRUCIBLE_GIT_COMMIT", "deadbeef")
     try:
         assert git_commit() == "deadbeef"
-        monkeypatch.setenv("NIGHTSHIFT_GIT_COMMIT", "other")
+        monkeypatch.setenv("CRUCIBLE_GIT_COMMIT", "other")
         assert git_commit() == "deadbeef"  # cached
     finally:
         git_commit.cache_clear()
@@ -83,7 +83,7 @@ def test_git_commit_env_override(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_git_commit_falls_back_to_unknown(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     git_commit.cache_clear()
-    monkeypatch.delenv("NIGHTSHIFT_GIT_COMMIT", raising=False)
+    monkeypatch.delenv("CRUCIBLE_GIT_COMMIT", raising=False)
     monkeypatch.setenv("PATH", str(tmp_path))  # no git here
     try:
         assert git_commit() == "unknown"
