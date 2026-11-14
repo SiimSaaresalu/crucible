@@ -229,6 +229,65 @@ def play_command(
     typer.echo(json.dumps(line))
 
 
+export_app = typer.Typer(help="Export a task to another format.", no_args_is_help=True)
+app.add_typer(export_app, name="export")
+
+
+@export_app.command("harbor")
+def export_harbor_command(
+    out: Annotated[Path, typer.Option(help="Output folder (a Harbor dataset folder).")],
+    task: Annotated[str, typer.Option("--task", help="Task ref, e.g. incident@1.")] = "incident@1",
+    seeds: Annotated[str, typer.Option(help="Seeds, e.g. '0-9,12'.")] = "0-9",
+    solution_policy: Annotated[
+        str, typer.Option(help="Policy that solution/solve.sh plays (the oracle).")
+    ] = "reference",
+    wheel: Annotated[
+        Path | None, typer.Option(help="Prebuilt engine wheel (default: build it).")
+    ] = None,
+    requirements: Annotated[
+        Path | None, typer.Option(help="Pinned requirements for the wheel (with --wheel).")
+    ] = None,
+    force: Annotated[bool, typer.Option("--force", help="Replace a non-empty --out.")] = False,
+) -> None:
+    """Write one Harbor task folder per seed."""
+    import tempfile
+
+    from nightshift.export.harbor import (
+        EngineArtifacts,
+        ExportError,
+        build_engine_artifacts,
+        export_harbor,
+    )
+
+    if (wheel is None) != (requirements is None):
+        _fail("give both --wheel and --requirements, or neither")
+    try:
+        seed_list = parse_seeds(seeds)
+        get_task(task)
+        get_policy(solution_policy, task)
+    except (KeyError, ValueError) as exc:
+        _fail(str(exc.args[0]) if isinstance(exc, KeyError) and exc.args else str(exc))
+    with tempfile.TemporaryDirectory(prefix="nightshift-wheel-") as tmp:
+        try:
+            if wheel is not None and requirements is not None:
+                artifacts = EngineArtifacts(wheel=wheel, requirements=requirements)
+            else:
+                artifacts = build_engine_artifacts(Path(tmp))
+            folders = export_harbor(
+                task,
+                seed_list,
+                out,
+                artifacts,
+                solution_policy=solution_policy,
+                force=force,
+            )
+        except (ExportError, OSError) as exc:
+            _fail(str(exc))
+    for folder in folders:
+        typer.echo(folder)
+    typer.echo(f"Run: harbor run -p {out} -a oracle")
+
+
 @app.command("serve")
 def serve_command() -> None:
     """Serve the HTTP API (settings come from the environment)."""

@@ -16,3 +16,7 @@ Run everything with `uv run pytest` (from `engine/`). The nine tests from the br
 | `test_parallel_same_result` | `policies/test_parallel_same_result.py::test_concurrency_8_matches_concurrency_1` |
 
 `policies/golden_scores.json` holds pinned scores; do not edit it by hand.
+
+`export/test_harbor.py` checks the Harbor export without Docker: the folder layout, `task.toml`
+and `docker-compose.yaml`, and that each grade token is only in `[verifier.env]` and the
+sidecar's environment. The real Harbor runs are manual; see `docs/harbor-runs.md`.

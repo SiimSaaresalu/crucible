@@ -1,0 +1,41 @@
+schema_version = "1.1"
+
+[task]
+name = "@@TASK_NAME@@"
+description = "Night Shift Gym @@TASK_REF@@, seed @@SEED@@: on-call incident response over MCP tools."
+authors = []
+keywords = ["nightshift", "incident-response", "mcp", "interactive"]
+
+[metadata]
+task_ref = "@@TASK_REF@@"
+seed = @@SEED@@
+engine_version = "@@ENGINE_VERSION@@"
+git_commit = "@@GIT_COMMIT@@"
+generator = "nightshift export harbor"
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 120.0
+
+[verifier.env]
+GRADE_TOKEN = "@@GRADE_TOKEN@@"
+
+[environment]
+build_timeout_sec = 900.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 10240
+gpus = 0
+
+[[environment.mcp_servers]]
+name = "mcp-server"
+transport = "streamable-http"
+url = "http://mcp-server:8000/mcp"
+args = []
+
+[environment.env]
+
+[solution.env]
+NIGHTSHIFT_POLICY = "@@SOLUTION_POLICY@@"
