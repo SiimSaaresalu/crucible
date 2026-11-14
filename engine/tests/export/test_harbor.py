@@ -5,6 +5,7 @@ import json
 import tomllib
 from pathlib import Path
 
+import click
 import pytest
 import yaml
 from typer.testing import CliRunner
@@ -239,4 +240,4 @@ def test_cli(tmp_path: Path, artifacts: EngineArtifacts) -> None:
     no_task = [a for a in args if a not in ("--task", "incident@1")]
     missing = CliRunner().invoke(app, [*no_task, *prebuilt, "--force"])
     assert missing.exit_code == 2
-    assert "--task" in missing.output
+    assert "Missing option '--task'" in click.unstyle(missing.output)
