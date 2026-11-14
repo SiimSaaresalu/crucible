@@ -9,6 +9,7 @@ from nightshift.core.registry import (
     UnknownTaskError,
     get_policy,
     get_task,
+    list_policies,
     list_tasks,
     register_policy,
     register_task,
@@ -16,6 +17,8 @@ from nightshift.core.registry import (
 from nightshift.core.scoring import Score
 from nightshift.core.task import Task, TaskSpec
 from nightshift.core.tools import Observation, ToolCall, ToolResult, ToolSpec
+from nightshift.policies.baselines import DoNothing
+from nightshift.policies.reference.guess import BinarySearch
 
 
 class _Base(Task):
@@ -172,3 +175,25 @@ def test_state_restored_after_reset_context() -> None:
     with registry._reset_for_tests():  # pyright: ignore[reportPrivateUsage]
         assert list_tasks() == []
     assert list_tasks() == ["outer@1"]
+
+
+def test_list_policies_merges_specific_and_generic_without_duplicates() -> None:
+    register_policy("b")(_Generic)
+    register_policy("a", "dummy")(_Specific)
+    register_policy("b", "dummy")(_Specific)
+    register_policy("c", "other")(_Specific)
+    assert list_policies("dummy@1") == ["a", "b"]
+    assert list_policies("other") == ["b", "c"]
+
+
+def test_list_policies_rejects_malformed_ref() -> None:
+    with pytest.raises(ValueError, match="Malformed task ref"):
+        list_policies("x@")
+
+
+def test_list_policies_for_builtin_policy_shapes() -> None:
+    # The registry is empty here, so register the built-in classes the way their modules do.
+    register_policy("do_nothing")(DoNothing)
+    register_policy("reference", "guess")(BinarySearch)
+    assert {"do_nothing", "reference"} <= set(list_policies("guess@1"))
+    assert list_policies("incident@1") == ["do_nothing"]
