@@ -7,9 +7,9 @@ from pathlib import Path
 
 import pytest
 
-from nightshift.core.executor import LocalExecutor
-from nightshift.core.jobs import Job
-from nightshift.core.registry import list_tasks
+from crucible.core.executor import LocalExecutor
+from crucible.core.jobs import Job
+from crucible.core.registry import list_tasks
 
 GOLDEN = Path(__file__).parent / "golden_scores.json"
 SEEDS = list(range(10))
@@ -20,7 +20,7 @@ POLICIES: dict[str, list[str]] = {
 CASES = [(task, policy) for task, names in POLICIES.items() for policy in names]
 MESSAGE = (
     "Score changed: bump the task version or, if the change is intended for this version, "
-    "regenerate with NIGHTSHIFT_UPDATE_GOLDEN=1."
+    "regenerate with CRUCIBLE_UPDATE_GOLDEN=1."
 )
 
 Scores = dict[str, dict[str, dict[str, float]]]
@@ -39,7 +39,7 @@ def measured(tmp_path_factory: pytest.TempPathFactory) -> Scores:
 
 @pytest.fixture(scope="module")
 def golden(measured: Scores) -> Scores:
-    if os.environ.get("NIGHTSHIFT_UPDATE_GOLDEN") == "1":
+    if os.environ.get("CRUCIBLE_UPDATE_GOLDEN") == "1":
         GOLDEN.write_text(json.dumps(measured, indent=2, sort_keys=True) + "\n")
     return json.loads(GOLDEN.read_text())
 

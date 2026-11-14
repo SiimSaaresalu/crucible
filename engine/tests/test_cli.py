@@ -6,10 +6,10 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from nightshift.cli import app, summarise
-from nightshift.core.episode import EpisodeResult
-from nightshift.core.jobs import Job
-from nightshift.core.scoring import Score
+from crucible.cli import app, summarise
+from crucible.core.episode import EpisodeResult
+from crucible.core.jobs import Job
+from crucible.core.scoring import Score
 
 runner = CliRunner()
 

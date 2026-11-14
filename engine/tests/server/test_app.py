@@ -7,11 +7,11 @@ from pathlib import Path
 import httpx
 import pytest
 
-from nightshift.core.registry import get_task
-from nightshift.server.app import create_app
-from nightshift.server.settings import Settings
-from nightshift.server.store import InMemorySessionStore
-from nightshift.tasks.incident.world import make_world
+from crucible.core.registry import get_task
+from crucible.envs.incident.world import make_world
+from crucible.server.app import create_app
+from crucible.server.settings import Settings
+from crucible.server.store import InMemorySessionStore
 
 HIDDEN_WORDS = [
     "bad_deploy",

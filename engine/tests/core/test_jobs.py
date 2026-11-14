@@ -1,6 +1,6 @@
 import pytest
 
-from nightshift.core.jobs import Job, RunSpec, expand, parse_seeds
+from crucible.core.jobs import Job, RunSpec, expand, parse_seeds
 
 
 def test_job_id_is_stable() -> None:

@@ -9,18 +9,18 @@ import pytest
 import yaml
 from typer.testing import CliRunner
 
-from nightshift.cli import app
-from nightshift.core import registry
-from nightshift.core.registry import get_task, register_task
-from nightshift.export.harbor import (
+from crucible.cli import app
+from crucible.core import registry
+from crucible.core.registry import get_task, register_task
+from crucible.envs.guess.task import GuessNumber
+from crucible.export.harbor import (
     EngineArtifacts,
     ExportError,
     export_harbor,
     task_folder_name,
 )
-from nightshift.tasks.guess.task import GuessNumber
 
-WHEEL = "nightshift-0.1.0-py3-none-any.whl"
+WHEEL = "crucible-0.1.0-py3-none-any.whl"
 FILES = {
     "task.toml",
     "instruction.md",
@@ -99,18 +99,18 @@ def test_layout(tmp_path: Path, artifacts: EngineArtifacts) -> None:
 def test_task_toml_and_compose(tmp_path: Path, artifacts: EngineArtifacts) -> None:
     (folder,) = _export(tmp_path / "out", artifacts, [5])
     config = tomllib.loads((folder / "task.toml").read_text())
-    assert config["task"]["name"] == "nightshift/incident-1-seed-5"
+    assert config["task"]["name"] == "crucible/incident-1-seed-5"
     assert config["metadata"] == {
         "task_ref": "incident@1",
         "seed": 5,
         "engine_version": "0.1.0",
         "git_commit": "abc123",
-        "generator": "nightshift export harbor",
+        "generator": "crucible export harbor",
     }
     (server,) = config["environment"]["mcp_servers"]
     assert server["url"] == "http://mcp-server:8000/mcp"
     assert config["environment"]["env"] == {}
-    assert config["solution"]["env"] == {"NIGHTSHIFT_POLICY": "reference"}
+    assert config["solution"]["env"] == {"CRUCIBLE_POLICY": "reference"}
 
     compose = yaml.safe_load((folder / "environment/docker-compose.yaml").read_text())
     assert server["name"] in compose["services"]
@@ -130,7 +130,7 @@ def test_metadata_comes_from_the_spec(
     (folder,) = _export(tmp_path / "out", artifacts, [4], task_ref)
     task = tomllib.loads((folder / "task.toml").read_text())["task"]
     assert task["description"] == f"{spec.description} ({spec.ref}, seed 4)"
-    assert task["keywords"][:3] == ["nightshift", "mcp", "interactive"]
+    assert task["keywords"][:3] == ["crucible", "mcp", "interactive"]
     assert set(spec.keywords) <= set(task["keywords"])
     assert len(set(task["keywords"])) == len(task["keywords"])
     instruction = (folder / "instruction.md").read_text()
@@ -163,7 +163,7 @@ def test_metadata_is_escaped_for_toml(tmp_path: Path, artifacts: EngineArtifacts
         (folder,) = _export(tmp_path / "out", artifacts, [0], "quoted@1")
     task = tomllib.loads((folder / "task.toml").read_text())["task"]
     assert task["description"] == 'Say "hi"\\ then\nstop. (quoted@1, seed 0)'
-    assert task["keywords"] == ["nightshift", "mcp", "interactive", 'kw "1"']
+    assert task["keywords"] == ["crucible", "mcp", "interactive", 'kw "1"']
     assert (folder / "instruction.md").read_text().startswith('# A "quoted" title\n')
 
 
@@ -185,7 +185,7 @@ def test_agent_side_has_no_engine_or_secrets(tmp_path: Path, artifacts: EngineAr
     for leak in ("/grade", "GRADE_TOKEN", "seed", "SIDECAR"):
         assert leak not in instruction
     main = (folder / "environment/Dockerfile").read_text()
-    assert "nightshift" not in main.lower().replace("night shift", "")
+    assert "crucible" not in main.lower()
     assert ".whl" not in main
 
 
@@ -198,7 +198,7 @@ def test_manifest(tmp_path: Path, artifacts: EngineArtifacts) -> None:
     assert len(manifest["wheel_sha256"]) == 64
     folder = tmp_path / "out" / "incident-1-seed-2"
     config = tomllib.loads((folder / "task.toml").read_text())
-    assert config["solution"]["env"]["NIGHTSHIFT_POLICY"] == "stop_early"
+    assert config["solution"]["env"]["CRUCIBLE_POLICY"] == "stop_early"
 
 
 def test_non_empty_out_needs_force(tmp_path: Path, artifacts: EngineArtifacts) -> None:

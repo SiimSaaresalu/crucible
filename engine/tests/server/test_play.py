@@ -1,4 +1,4 @@
-"""`nightshift play` against live servers. The CLI runs in a worker thread (it owns a loop)."""
+"""`crucible play` against live servers. The CLI runs in a worker thread (it owns a loop)."""
 
 import asyncio
 import json
@@ -7,9 +7,9 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from nightshift.cli import app
-from nightshift.core.executor import LocalExecutor
-from nightshift.core.jobs import Job
+from crucible.cli import app
+from crucible.core.executor import LocalExecutor
+from crucible.core.jobs import Job
 from tests.server.live import free_port, live_api, live_sidecar
 
 runner = CliRunner()

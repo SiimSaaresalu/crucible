@@ -8,8 +8,8 @@ from pathlib import Path
 
 import uvicorn
 
-from nightshift.server.app import create_app
-from nightshift.server.settings import Settings
+from crucible.server.app import create_app
+from crucible.server.settings import Settings
 
 TOKEN = "test-token"
 

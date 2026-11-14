@@ -1,8 +1,9 @@
-# Night Shift Gym
+# Crucible
 
 Interactive agent environments: a simulator and a grader, written one time, give MCP tools, seeded variants, baselines and exploit tests, and one command exports the tasks to Harbor.
 
 - `engine/`: the Python engine, CLI and server. See [engine/README.md](engine/README.md).
+- `engine/src/crucible/envs/<name>/`: one folder per environment, with its policies, tests and a `README.md` card. Other packages can add environments through the `crucible.envs` entry point.
 - `docs/decisions.md`: design decisions. `docs/harbor-runs.md`: Harbor run scores.
 
 ## Pinned versions
@@ -17,7 +18,7 @@ Interactive agent environments: a simulator and a grader, written one time, give
 ## Run the Harbor tasks
 
 ```bash
-uv run --directory engine nightshift export harbor --task incident@1 --seeds 0-9 --out ../harbor/incident-1
+uv run --directory engine crucible export harbor --task incident@1 --seeds 0-9 --out ../harbor/incident-1
 harbor run -p harbor/incident-1 -a oracle -o jobs
 ```
 

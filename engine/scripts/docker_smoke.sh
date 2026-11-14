@@ -4,8 +4,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-IMAGE="${IMAGE:-nightshift-engine:smoke}"
-COMMIT="${NIGHTSHIFT_GIT_COMMIT:-$(git rev-parse HEAD 2>/dev/null || echo unknown)}"
+IMAGE="${IMAGE:-crucible-engine:smoke}"
+COMMIT="${CRUCIBLE_GIT_COMMIT:-$(git rev-parse HEAD 2>/dev/null || echo unknown)}"
 TOKEN="smoke-test-token"
 CONTAINERS=()
 
@@ -33,7 +33,7 @@ wait_healthy() {
 }
 
 echo "== build $IMAGE (commit $COMMIT)"
-docker build --build-arg "NIGHTSHIFT_GIT_COMMIT=${COMMIT}" -t "$IMAGE" .
+docker build --build-arg "CRUCIBLE_GIT_COMMIT=${COMMIT}" -t "$IMAGE" .
 
 echo "== non-root check"
 uid="$(docker run --rm --entrypoint id "$IMAGE" -u)"
@@ -43,7 +43,7 @@ echo "== api mode"
 PORT_API="$(free_port)"
 CONTAINERS+=("$(docker run -d -p "${PORT_API}:8000" "$IMAGE")")
 wait_healthy "$PORT_API"
-OUT="$(uv run nightshift play --api "http://localhost:${PORT_API}" --task incident@1 --seed 0 --policy reference)"
+OUT="$(uv run crucible play --api "http://localhost:${PORT_API}" --task incident@1 --seed 0 --policy reference)"
 echo "$OUT"
 python3 - "$OUT" <<'PY'
 import json, sys

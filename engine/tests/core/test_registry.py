@@ -1,10 +1,11 @@
 from collections.abc import Generator
+from importlib.metadata import EntryPoint
 
 import pytest
 
-from nightshift.core import registry
-from nightshift.core.policy import Policy
-from nightshift.core.registry import (
+from crucible.core import registry
+from crucible.core.policy import Policy
+from crucible.core.registry import (
     UnknownPolicyError,
     UnknownTaskError,
     get_policy,
@@ -14,11 +15,11 @@ from nightshift.core.registry import (
     register_policy,
     register_task,
 )
-from nightshift.core.scoring import Score
-from nightshift.core.task import Task, TaskSpec
-from nightshift.core.tools import Observation, ToolCall, ToolResult, ToolSpec
-from nightshift.policies.baselines import DoNothing
-from nightshift.policies.reference.guess import BinarySearch
+from crucible.core.scoring import Score
+from crucible.core.task import Task, TaskSpec
+from crucible.core.tools import Observation, ToolCall, ToolResult, ToolSpec
+from crucible.envs.guess.policies.reference import BinarySearch
+from crucible.policies.baselines import DoNothing
 
 
 class _Base(Task):
@@ -161,13 +162,56 @@ def test_unknown_policy_lists_options() -> None:
     assert "theirs" not in msg
 
 
+def _fake_entry_points(monkeypatch: pytest.MonkeyPatch, *eps: EntryPoint) -> None:
+    def fake(*, group: str) -> list[EntryPoint]:
+        assert group == registry.ENTRY_POINT_GROUP
+        return list(eps)
+
+    monkeypatch.setattr(registry, "entry_points", fake)
+    monkeypatch.setattr(registry, "_loaded", False)
+
+
 def test_builtins_loaded_once(monkeypatch: pytest.MonkeyPatch) -> None:
     imported: list[str] = []
     monkeypatch.setattr(registry.importlib, "import_module", imported.append)
-    monkeypatch.setattr(registry, "_loaded", False)
+    _fake_entry_points(monkeypatch)
     list_tasks()
     list_tasks()
-    assert imported == ["nightshift.tasks", "nightshift.policies"]
+    assert imported == ["crucible.policies"]
+
+
+def test_builtin_envs_declared_as_entry_points() -> None:
+    assert ("guess", "crucible.envs.guess") in registry.list_envs()
+    assert ("incident", "crucible.envs.incident") in registry.list_envs()
+
+
+def test_plugin_env_registers_through_entry_point(monkeypatch: pytest.MonkeyPatch) -> None:
+    loaded: list[str] = []
+
+    class _PluginEntryPoint(EntryPoint):
+        def load(self) -> object:  # stands in for importing the plugin's env module
+            loaded.append(self.name)
+            if self.name == "plugged":
+                register_task(_make_task("plugged", 1))
+                register_policy("solver", "plugged")(_Specific)
+            return None
+
+    _fake_entry_points(
+        monkeypatch,
+        _PluginEntryPoint("plugged", "plugin_pkg.plugged", registry.ENTRY_POINT_GROUP),
+        _PluginEntryPoint("another", "plugin_pkg.another", registry.ENTRY_POINT_GROUP),
+    )
+    assert list_tasks() == ["plugged@1"]
+    assert loaded == ["another", "plugged"]  # stable order, by entry point name
+    assert "solver" in list_policies("plugged@1")
+
+
+def test_broken_plugin_names_the_entry_point(monkeypatch: pytest.MonkeyPatch) -> None:
+    broken = EntryPoint("broken", "no_such_module_for_crucible", registry.ENTRY_POINT_GROUP)
+    _fake_entry_points(monkeypatch, broken)
+    with pytest.raises(registry.EnvLoadError, match=r"'broken'.*no_such_module_for_crucible"):
+        list_tasks()
+    assert registry._loaded is False  # pyright: ignore[reportPrivateUsage]
 
 
 def test_state_restored_after_reset_context() -> None:

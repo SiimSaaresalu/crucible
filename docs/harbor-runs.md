@@ -41,11 +41,21 @@ The oracle reward is equal to the in-process reference score (`nightshift eval -
 - Gemini 3.8 Flash scores close to the reference. It does not score above it: the reward is mostly set by how soon the repair starts (see `docs/decisions.md`, calibration finding), and Gemini made 3–6 more calls than the reference. With only a small gap between the reference and the model, this task cannot separate strong models well. Faults 4–6 should be harder.
 - `[agent] network_mode = "allowlist"` with `allowed_hosts` fails at startup in Harbor 0.26.0. The error is `conflicting options: port exposing and the container type network mode` on the sidecar. Job `incident-1-opencode-allowed-hosts`.
 
+## Re-run after the `crucible` rename
+
+Date: 2026-11-14. Engine: commit `0667420` plus the uncommitted rename and `envs/` move (the
+exported `task.toml` records `0667420`). Export: `crucible export harbor --task incident@1 --seeds 0-9`.
+
+| Job | Agent | Tasks | Mean reward | Root cause correct | Note |
+|---|---|---|---|---|---|
+| `crucible-incident-1-oracle` | oracle | 10 | 0.971 | 10/10 | equal to the golden reference score on every seed, all digits |
+| `crucible-incident-1-opencode-gemini` | opencode, `google/gemini-3.8-flash` | 1 (seed 0) | 0.918 | 1/1 | 12 steps, `task_done`, MCP tools only |
+
 ## Commands
 
 ```bash
 export PATH=$PATH:/Applications/Docker.app/Contents/Resources/bin
-uv run --directory engine nightshift export harbor --task incident@1 --seeds 0-9 --out ../harbor/incident-1
+uv run --directory engine crucible export harbor --task incident@1 --seeds 0-9 --out ../harbor/incident-1
 harbor run -p harbor/incident-1 -a oracle -o jobs --job-name incident-1-oracle
 harbor run -p harbor/incident-1 -a nop -o jobs --job-name incident-1-nop -l 3
 set -a; . ./.env; set +a

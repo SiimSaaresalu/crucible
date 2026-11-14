@@ -7,8 +7,8 @@ from pathlib import Path
 import httpx
 import pytest
 
-from nightshift.server.app import create_app
-from nightshift.server.settings import Settings
+from crucible.server.app import create_app
+from crucible.server.settings import Settings
 
 TOKEN = "secret-token"
 

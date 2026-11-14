@@ -1,4 +1,4 @@
-from nightshift.core.rng import RngStreams
+from crucible.core.rng import RngStreams
 
 EXO = [25, 989, 969]
 ACT = [297, 553, 285]

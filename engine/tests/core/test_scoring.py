@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from pydantic import BaseModel, Field
 
-from nightshift.core.scoring import Score, load_scoring_config
+from crucible.core.scoring import Score, load_scoring_config
 
 
 class Cfg(BaseModel):

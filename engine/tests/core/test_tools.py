@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from nightshift.core.tools import (
+from crucible.core.tools import (
     ToolCall,
     ToolResult,
     ToolSpec,
