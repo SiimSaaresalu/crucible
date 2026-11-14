@@ -1,5 +1,6 @@
 """Tool definitions, calls, results and observations."""
 
+import json
 from collections.abc import Mapping, Sequence
 from typing import Any, Literal
 
@@ -73,6 +74,15 @@ def validate_call(specs: Mapping[str, ToolSpec], call: ToolCall) -> BaseModel | 
         return ToolResult(ok=False, error=_error_text(call.name, exc))
 
 
+def result_text(result: ToolResult) -> str:
+    """Text form of a tool result for `Observation.text`."""
+    if not result.ok:
+        return f"Error: {result.error}"
+    if isinstance(result.content, str):
+        return result.content
+    return json.dumps(result.content, sort_keys=True)
+
+
 def make_tool(name: str, description: str, kind: ToolKind, **fields: Any) -> ToolSpec:
     """Build a `ToolSpec` from pydantic field definitions, e.g. `n=(int, Field(ge=1))`."""
     model = create_model(f"{name}_args", **fields)
@@ -91,6 +101,7 @@ __all__ = [
     "ToolResult",
     "ToolSpec",
     "make_tool",
+    "result_text",
     "tool_map",
     "validate_call",
 ]

@@ -1,6 +1,5 @@
 """The one episode loop."""
 
-import json
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict
@@ -8,8 +7,9 @@ from pydantic import BaseModel, ConfigDict
 from nightshift.core.jobs import Job
 from nightshift.core.policy import Policy
 from nightshift.core.scoring import Score
+from nightshift.core.session import EpisodeSession
 from nightshift.core.task import Task
-from nightshift.core.tools import Observation, ToolResult
+from nightshift.core.tools import Observation, result_text
 from nightshift.core.transcript import StopReason, TranscriptWriter
 
 
@@ -33,38 +33,18 @@ class EpisodeResult(BaseModel):
     retried: int = 0
 
 
-def _result_text(result: ToolResult) -> str:
-    """Text form of a tool result for `Observation.text`."""
-    if not result.ok:
-        return f"Error: {result.error}"
-    if isinstance(result.content, str):
-        return result.content
-    return json.dumps(result.content, sort_keys=True)
-
-
-async def _play(
-    task: Task, policy: Policy, seed: int, writer: TranscriptWriter
-) -> tuple[StopReason, Score]:
-    obs = await task.reset(seed)
+async def _play(session: EpisodeSession, policy: Policy, job: Job) -> None:
+    task = session.task
+    obs = await session.start(policy_name=policy.name, job=job)
     await policy.reset(task.spec, task.tools(), task.instruction())
-    reason: StopReason = "budget_exhausted"
-    for step in range(task.spec.max_steps):
+    for _ in range(session.max_steps):
         if task.done():
-            reason = "task_done"
             break
         call = await policy.act(obs)
         if call is None:
-            reason = "policy_stop"
             break
-        result = await task.step(call)
-        writer.step(step, call, result)
-        obs = Observation(text=_result_text(result), last_result=result)
-    else:
-        if task.done():
-            reason = "task_done"
-    score = await task.grade()
-    flags = {**score.flags, "budget_exhausted": reason == "budget_exhausted"}
-    return reason, score.model_copy(update={"flags": flags})
+        result = await session.step(call)
+        obs = Observation(text=result_text(result), last_result=result)
 
 
 async def run_episode(
@@ -82,26 +62,20 @@ async def run_episode(
     `flags["env_error"]`, except `InfraError`: it is re-raised (and the partial transcript
     dropped) so the executor can retry, unless `record_infra_errors` is set (last attempt).
     """
+    session = EpisodeSession(task, seed, writer)
     try:
-        writer.header(
-            task=task.spec.ref,
-            scoring_hash=task.scoring_hash,
-            policy=policy.name,
-            seed=seed,
-            repeat=job.repeat,
-            job_id=job.job_id,
-        )
-        error: str | None = None
         try:
-            reason, score = await _play(task, policy, seed, writer)
+            await _play(session, policy, job)
+            reason, score = await session.close()
+            error: str | None = None
         except InfraError as exc:
             if not record_infra_errors:
                 raise
-            reason, score, error = "error", Score(total=0.0, flags={"env_error": True}), _name(exc)
+            error = _name(exc)
+            reason, score = await session.close(error)
         except Exception as exc:
-            reason, score, error = "error", Score(total=0.0, flags={"env_error": True}), _name(exc)
-        writer.footer(score, reason, error)
-        writer.close()
+            error = _name(exc)
+            reason, score = await session.close(error)
     except BaseException:
         writer.abort()
         raise
