@@ -4,9 +4,9 @@ from collections import deque
 from statistics import fmean
 from typing import Any
 
+from crucible.core.registry import register_policy
 from crucible.core.task import TaskSpec
 from crucible.core.tools import Observation, ToolCall, ToolSpec
-from crucible.envs.supplygym.policies.baselines import _register
 from crucible.envs.supplygym.policies.views import call, episode_over, parse_status
 
 HISTORY_WEEKS = 4  # One month smooths ordinary week-to-week demand variation.
@@ -16,7 +16,8 @@ HIGH_RISK = 0.5  # The midpoint of the public 0-to-1 risk scale warrants caution
 DISRUPTED_FILL = 0.8  # A missing fifth of promised supply warrants rerouting.
 
 
-@_register("protocol")
+@register_policy("protocol", "supplygym")
+@register_policy("protocol", "supplygym-fresh")
 class Protocol:
     """One briefing, one status, then one set_controls per simulated week.
 
