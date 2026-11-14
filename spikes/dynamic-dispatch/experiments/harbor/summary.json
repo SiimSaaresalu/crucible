@@ -1,0 +1,60 @@
+{
+  "agents": {
+    "nop": {
+      "agent_tool_errors": 0,
+      "exceptions": 0,
+      "mean_reward": 0.0,
+      "mean_utility": 0.0,
+      "post_completion_refusals": 0,
+      "rejected_episode_calls": 0,
+      "sample_stddev_reward": 0.0,
+      "seeds": [
+        1000,
+        1001,
+        1002
+      ],
+      "trials": 3
+    },
+    "opencode": {
+      "agent_tool_errors": 1,
+      "exceptions": 0,
+      "mean_reward": 0.945084879771609,
+      "mean_utility": 1923.7187559485385,
+      "post_completion_refusals": 1,
+      "rejected_episode_calls": 0,
+      "sample_stddev_reward": 0.0249368894070236,
+      "seeds": [
+        1000,
+        1001,
+        1002
+      ],
+      "trials": 3
+    },
+    "oracle": {
+      "agent_tool_errors": 0,
+      "exceptions": 0,
+      "mean_reward": 0.919312359303174,
+      "mean_utility": 1869.3703615164086,
+      "post_completion_refusals": 0,
+      "rejected_episode_calls": 0,
+      "sample_stddev_reward": 0.045030746106561506,
+      "seeds": [
+        1000,
+        1001,
+        1002
+      ],
+      "trials": 3
+    }
+  },
+  "paired_reference_minus_model": {
+    "losses": 3,
+    "mean_reward_difference": -0.025772520468435072,
+    "seeds": [
+      1000,
+      1001,
+      1002
+    ],
+    "ties": 0,
+    "wins": 0
+  }
+}

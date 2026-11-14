@@ -183,6 +183,7 @@ def test_builtins_loaded_once(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_builtin_envs_declared_as_entry_points() -> None:
+    assert ("dispatch", "crucible.envs.dispatch") in registry.list_envs()
     assert ("guess", "crucible.envs.guess") in registry.list_envs()
     assert ("incident", "crucible.envs.incident") in registry.list_envs()
 

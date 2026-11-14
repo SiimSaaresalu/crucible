@@ -3,6 +3,23 @@
 Crucible turns a simulator and a grader into an agent environment.
 You write them once; Crucible gives you MCP tools, seeded variants, baselines, exploit tests and a Harbor export.
 
+## Dynamic delivery dispatch: `dispatch@1`
+
+Dispatch four delivery vans through a six-hour shift with arriving orders, parcel capacity,
+deadlines, and changing traffic. A FastAPI service persists orders, cargo, assignments, and
+verified deliveries in SQLite. The seeded simulator advances physical vehicle movement.
+
+```bash
+uv run --directory engine crucible eval --task dispatch@1 \
+  --policy reference,nearest_first,deadline_first,greedy_insertion,stop_early,do_nothing \
+  --seeds 0-9 --out runs/dispatch-dev
+```
+
+See the [environment card](engine/src/crucible/envs/dispatch/README.md) and
+[spike plan and results](spikes/dynamic-dispatch/README.md).
+The initial experiment validates the backend and reproducibility, but does not establish
+a heuristic advantage over the model: Gemini beat the reference on all three paired Harbor worlds.
+
 ## Featured environment: `incident@1`
 
 Our Junction 2026 AfterQuery submission is `incident@1`, an on-call incident.

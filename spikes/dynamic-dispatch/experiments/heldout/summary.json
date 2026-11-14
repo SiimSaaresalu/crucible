@@ -1,0 +1,458 @@
+{
+  "base_git_commit": "59b15f25a931bfc7a8f01865abbe4c5c61097911",
+  "confidence_interval": "normal approximation: mean +/- 1.96 * sample_stddev / sqrt(n)",
+  "errors": 0,
+  "paired_reference_minus_baseline": {
+    "deadline_first": {
+      "losses": 3,
+      "reward_difference": {
+        "ci95_high": 0.08698979137211832,
+        "ci95_low": 0.05061642066043617,
+        "mean": 0.06880310601627725,
+        "stddev": 0.06561188031847602
+      },
+      "ties": 0,
+      "utility_difference": {
+        "ci95_high": 181.3224790719152,
+        "ci95_low": 104.55957967771928,
+        "mean": 142.94102937481725,
+        "stddev": 138.46828241116498
+      },
+      "wins": 47
+    },
+    "do_nothing": {
+      "losses": 0,
+      "reward_difference": {
+        "ci95_high": 0.9436089154714475,
+        "ci95_low": 0.9274957242052837,
+        "mean": 0.9355523198383656,
+        "stddev": 0.02906568063994978
+      },
+      "ties": 0,
+      "utility_difference": {
+        "ci95_high": 1969.7402633252066,
+        "ci95_low": 1858.6937173304689,
+        "mean": 1914.2169903278377,
+        "stddev": 200.310626786283
+      },
+      "wins": 50
+    },
+    "greedy_insertion": {
+      "losses": 3,
+      "reward_difference": {
+        "ci95_high": 0.002308124968206785,
+        "ci95_low": -0.0005073274037084453,
+        "mean": 0.0009003987822491699,
+        "stddev": 0.00507863638849237
+      },
+      "ties": 39,
+      "utility_difference": {
+        "ci95_high": 5.058620787460335,
+        "ci95_low": -0.843938254281396,
+        "mean": 2.1073412665894695,
+        "stddev": 10.647294706044766
+      },
+      "wins": 8
+    },
+    "nearest_first": {
+      "losses": 1,
+      "reward_difference": {
+        "ci95_high": 0.08602673760420285,
+        "ci95_low": 0.05742519042291533,
+        "mean": 0.07172596401355909,
+        "stddev": 0.05159272439876375
+      },
+      "ties": 0,
+      "utility_difference": {
+        "ci95_high": 177.55551617735046,
+        "ci95_low": 118.05278715185437,
+        "mean": 147.80415166460241,
+        "stddev": 107.33363059447423
+      },
+      "wins": 49
+    },
+    "stop_early": {
+      "losses": 0,
+      "reward_difference": {
+        "ci95_high": 0.6614651223922464,
+        "ci95_low": 0.6272795532809056,
+        "mean": 0.644372337836576,
+        "stddev": 0.061665427901404515
+      },
+      "ties": 0,
+      "utility_difference": {
+        "ci95_high": 1378.71022416531,
+        "ci95_low": 1264.8842433212947,
+        "mean": 1321.7972337433023,
+        "stddev": 205.3242931888092
+      },
+      "wins": 50
+    }
+  },
+  "policies": {
+    "deadline_first": {
+      "deliveries": {
+        "ci95_high": 32.6,
+        "ci95_low": 31.2,
+        "mean": 31.9,
+        "stddev": 2.5253813613805267
+      },
+      "driving_distance_km": {
+        "ci95_high": 207.40390743189255,
+        "ci95_low": 189.8384119281074,
+        "mean": 198.62115967999998,
+        "stddev": 31.68541067762314
+      },
+      "late_deliveries": {
+        "ci95_high": 6.496778705746598,
+        "ci95_low": 4.543221294253401,
+        "mean": 5.52,
+        "stddev": 3.5239124824083627
+      },
+      "on_time_percentage": {
+        "ci95_high": 85.75864479758587,
+        "ci95_low": 79.86281431830167,
+        "mean": 82.81072955794377,
+        "stddev": 10.635157430173951
+      },
+      "reward": {
+        "ci95_high": 0.890036365143885,
+        "ci95_low": 0.843462062500292,
+        "mean": 0.8667492138220885,
+        "stddev": 0.08401276843958956
+      },
+      "steps": {
+        "ci95_high": 13.0,
+        "ci95_low": 13.0,
+        "mean": 13.0,
+        "stddev": 0.0
+      },
+      "total_utility": {
+        "ci95_high": 1836.4751825016372,
+        "ci95_low": 1706.076739404404,
+        "mean": 1771.2759609530206,
+        "stddev": 235.21842696485135
+      },
+      "undelivered_orders": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "stddev": 0.0
+      }
+    },
+    "do_nothing": {
+      "deliveries": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "stddev": 0.0
+      },
+      "driving_distance_km": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "stddev": 0.0
+      },
+      "late_deliveries": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "stddev": 0.0
+      },
+      "on_time_percentage": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "stddev": 0.0
+      },
+      "reward": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "stddev": 0.0
+      },
+      "steps": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "stddev": 0.0
+      },
+      "total_utility": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "stddev": 0.0
+      },
+      "undelivered_orders": {
+        "ci95_high": 32.6,
+        "ci95_low": 31.2,
+        "mean": 31.9,
+        "stddev": 2.5253813613805267
+      }
+    },
+    "greedy_insertion": {
+      "deliveries": {
+        "ci95_high": 32.447136201927975,
+        "ci95_low": 31.072863798072028,
+        "mean": 31.76,
+        "stddev": 2.478972795826727
+      },
+      "driving_distance_km": {
+        "ci95_high": 208.80335561025652,
+        "ci95_low": 190.06877046974353,
+        "mean": 199.43606304000002,
+        "stddev": 33.79426580503436
+      },
+      "late_deliveries": {
+        "ci95_high": 3.582824612559158,
+        "ci95_low": 2.497175387440842,
+        "mean": 3.04,
+        "stddev": 1.9583416557935764
+      },
+      "on_time_percentage": {
+        "ci95_high": 92.14927148301759,
+        "ci95_low": 88.9194822341298,
+        "mean": 90.5343768585737,
+        "stddev": 5.8260354073774545
+      },
+      "reward": {
+        "ci95_high": 0.9425724894412042,
+        "ci95_low": 0.9267313526710288,
+        "mean": 0.9346519210561165,
+        "stddev": 0.028574936816057817
+      },
+      "steps": {
+        "ci95_high": 13.0,
+        "ci95_low": 13.0,
+        "mean": 13.0,
+        "stddev": 0.0
+      },
+      "total_utility": {
+        "ci95_high": 1966.8097715005883,
+        "ci95_low": 1857.4095266219083,
+        "mean": 1912.1096490612483,
+        "stddev": 197.34095667648896
+      },
+      "undelivered_orders": {
+        "ci95_high": 0.23715636880822588,
+        "ci95_low": 0.04284363119177416,
+        "mean": 0.14,
+        "stddev": 0.35050983275386566
+      }
+    },
+    "nearest_first": {
+      "deliveries": {
+        "ci95_high": 32.6,
+        "ci95_low": 31.2,
+        "mean": 31.9,
+        "stddev": 2.5253813613805267
+      },
+      "driving_distance_km": {
+        "ci95_high": 193.8924573970517,
+        "ci95_low": 179.5590799229483,
+        "mean": 186.72576866,
+        "stddev": 25.85517451338015
+      },
+      "late_deliveries": {
+        "ci95_high": 6.815719956236323,
+        "ci95_low": 5.024280043763677,
+        "mean": 5.92,
+        "stddev": 3.231477832136844
+      },
+      "on_time_percentage": {
+        "ci95_high": 84.29949939216053,
+        "ci95_low": 78.9352567818566,
+        "mean": 81.61737808700856,
+        "stddev": 9.676255932846253
+      },
+      "reward": {
+        "ci95_high": 0.8823175144469255,
+        "ci95_low": 0.8453351972026877,
+        "mean": 0.8638263558248066,
+        "stddev": 0.06671032476375713
+      },
+      "steps": {
+        "ci95_high": 13.0,
+        "ci95_low": 13.0,
+        "mean": 13.0,
+        "stddev": 0.0
+      },
+      "total_utility": {
+        "ci95_high": 1826.3583142841417,
+        "ci95_low": 1706.467363042329,
+        "mean": 1766.4128386632353,
+        "stddev": 216.26455261732488
+      },
+      "undelivered_orders": {
+        "ci95_high": 0.0,
+        "ci95_low": 0.0,
+        "mean": 0.0,
+        "stddev": 0.0
+      }
+    },
+    "reference": {
+      "deliveries": {
+        "ci95_high": 32.475595744667835,
+        "ci95_low": 31.084404255332167,
+        "mean": 31.78,
+        "stddev": 2.509492183771084
+      },
+      "driving_distance_km": {
+        "ci95_high": 208.32144549288068,
+        "ci95_low": 189.73126934711928,
+        "mean": 199.02635741999998,
+        "stddev": 33.533774530919096
+      },
+      "late_deliveries": {
+        "ci95_high": 3.618345556085118,
+        "ci95_low": 2.501654443914882,
+        "mean": 3.06,
+        "stddev": 2.0143363722100047
+      },
+      "on_time_percentage": {
+        "ci95_high": 92.14070356853657,
+        "ci95_low": 88.79490355664066,
+        "mean": 90.46780356258861,
+        "stddev": 6.035300706391907
+      },
+      "reward": {
+        "ci95_high": 0.9436089154714475,
+        "ci95_low": 0.9274957242052837,
+        "mean": 0.9355523198383656,
+        "stddev": 0.02906568063994978
+      },
+      "steps": {
+        "ci95_high": 13.0,
+        "ci95_low": 13.0,
+        "mean": 13.0,
+        "stddev": 0.0
+      },
+      "total_utility": {
+        "ci95_high": 1969.7402633252066,
+        "ci95_low": 1858.6937173304689,
+        "mean": 1914.2169903278377,
+        "stddev": 200.310626786283
+      },
+      "undelivered_orders": {
+        "ci95_high": 0.21098923013192275,
+        "ci95_low": 0.02901076986807724,
+        "mean": 0.12,
+        "stddev": 0.32826072265931594
+      }
+    },
+    "stop_early": {
+      "deliveries": {
+        "ci95_high": 10.091630784516031,
+        "ci95_low": 9.34836921548397,
+        "mean": 9.72,
+        "stddev": 1.340727795045722
+      },
+      "driving_distance_km": {
+        "ci95_high": 31.0267371618896,
+        "ci95_low": 27.1091415181104,
+        "mean": 29.06793934,
+        "stddev": 7.06673072873253
+      },
+      "late_deliveries": {
+        "ci95_high": 0.09486857023834319,
+        "ci95_low": -0.01486857023834319,
+        "mean": 0.04,
+        "stddev": 0.19794866372215741
+      },
+      "on_time_percentage": {
+        "ci95_high": 100.14254545454546,
+        "ci95_low": 99.0938181818182,
+        "mean": 99.61818181818182,
+        "stddev": 1.8917402197977768
+      },
+      "reward": {
+        "ci95_high": 0.3083167662021593,
+        "ci95_low": 0.27404319780142006,
+        "mean": 0.2911799820017897,
+        "stddev": 0.061824164876591155
+      },
+      "steps": {
+        "ci95_high": 3.0,
+        "ci95_low": 3.0,
+        "mean": 3.0,
+        "stddev": 0.0
+      },
+      "total_utility": {
+        "ci95_high": 626.9612471167555,
+        "ci95_low": 557.8782660523151,
+        "mean": 592.4197565845353,
+        "stddev": 124.6149091205297
+      },
+      "undelivered_orders": {
+        "ci95_high": 23.01755109694872,
+        "ci95_low": 21.34244890305128,
+        "mean": 22.18,
+        "stddev": 3.021622756340151
+      }
+    }
+  },
+  "policies_evaluated": [
+    "reference",
+    "nearest_first",
+    "deadline_first",
+    "greedy_insertion",
+    "stop_early",
+    "do_nothing"
+  ],
+  "salt_namespace": null,
+  "seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004,
+    1005,
+    1006,
+    1007,
+    1008,
+    1009,
+    1010,
+    1011,
+    1012,
+    1013,
+    1014,
+    1015,
+    1016,
+    1017,
+    1018,
+    1019,
+    1020,
+    1021,
+    1022,
+    1023,
+    1024,
+    1025,
+    1026,
+    1027,
+    1028,
+    1029,
+    1030,
+    1031,
+    1032,
+    1033,
+    1034,
+    1035,
+    1036,
+    1037,
+    1038,
+    1039,
+    1040,
+    1041,
+    1042,
+    1043,
+    1044,
+    1045,
+    1046,
+    1047,
+    1048,
+    1049
+  ],
+  "source_sha256": "086cde3ef9a1d6741e0048b3be0d876503e52c96950d90687c4ded7a7a01e1e5",
+  "split": "heldout",
+  "task": "dispatch@1"
+}
