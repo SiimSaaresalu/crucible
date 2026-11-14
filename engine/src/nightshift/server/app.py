@@ -1,11 +1,19 @@
 """The FastAPI app factory and the HTTP v1 API."""
 
+import asyncio
+import contextlib
+import hmac
+import logging
+from collections.abc import AsyncGenerator
 from pathlib import Path
+from typing import Annotated
 from uuid import uuid4
 
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import PlainTextResponse
+from fastapi import FastAPI, Header, HTTPException
+from fastapi.responses import JSONResponse, PlainTextResponse, Response
+from mcp.server.streamable_http_manager import StreamableHTTPASGIApp, StreamableHTTPSessionManager
 from pydantic import BaseModel, ConfigDict, Field, JsonValue
+from starlette.routing import Route
 
 from nightshift.core.jobs import Job
 from nightshift.core.registry import get_task, list_tasks
@@ -13,8 +21,9 @@ from nightshift.core.scoring import Score
 from nightshift.core.session import EpisodeSession
 from nightshift.core.task import Task
 from nightshift.core.tools import Observation, ToolCall, ToolKind, ToolResult
-from nightshift.core.transcript import StopReason, TranscriptWriter
+from nightshift.core.transcript import StopReason, TranscriptWriter, read_transcript
 from nightshift.server.logging import configure_logging
+from nightshift.server.mcp import build_mcp_server
 from nightshift.server.settings import Settings
 from nightshift.server.store import Entry, InMemorySessionStore, SessionStore
 
@@ -56,22 +65,16 @@ def _lookup(task_ref: str) -> Task:
         raise HTTPException(422, detail=str(exc)) from None
 
 
-def create_app(settings: Settings | None = None, store: SessionStore | None = None) -> FastAPI:
-    """Build the app. `store` lets tests inject a store with a fake clock."""
-    settings = settings or Settings()
-    logger = configure_logging(settings.log_level)
-    sessions: SessionStore = store or InMemorySessionStore(settings.session_ttl_seconds)
-    app = FastAPI(title="Night Shift Gym", docs_url=None, redoc_url=None, openapi_url=None)
+def _add_api_routes(
+    app: FastAPI, settings: Settings, sessions: SessionStore, logger: logging.Logger
+) -> None:
+    """The `/v1` routes (api mode)."""
 
     def entry_for(episode_id: str) -> Entry:
         entry = sessions.get(episode_id)
         if entry is None:
             raise HTTPException(404, detail="Unknown episode")
         return entry
-
-    @app.get("/healthz", response_class=PlainTextResponse)
-    async def healthz() -> str:  # pyright: ignore[reportUnusedFunction]
-        return "ok"
 
     @app.get("/v1/tasks")
     async def tasks() -> list[str]:  # pyright: ignore[reportUnusedFunction]
@@ -123,6 +126,104 @@ def create_app(settings: Settings | None = None, store: SessionStore | None = No
         logger.info("episode closed", extra={"episode_id": episode_id})
         return CloseResponse(score=score, steps=steps, stop_reason=reason)
 
+
+class GradeResponse(BaseModel):
+    task: str
+    seed: int
+    reward: float
+    breakdown: dict[str, float]
+    flags: dict[str, bool]
+    steps: int
+    stop_reason: StopReason
+    transcript: list[dict[str, JsonValue]]
+
+
+def _add_sidecar_routes(app: FastAPI, settings: Settings, logger: logging.Logger) -> None:
+    """`/mcp` and `/grade` for the one episode of `settings.sidecar_task` (sidecar mode)."""
+    task = _lookup(settings.sidecar_task)
+    seed = settings.sidecar_seed
+    path = settings.runs_dir / "episodes" / f"sidecar-{task.spec.ref}-{seed}.jsonl"
+    session = EpisodeSession(task, seed, TranscriptWriter(path))
+    lock = asyncio.Lock()
+    manager = StreamableHTTPSessionManager(
+        build_mcp_server(session, lock), json_response=True, stateless=True
+    )
+    app.state.sidecar_session = session
+    app.state.mcp_manager = manager
+    app.router.routes.append(Route("/mcp", StreamableHTTPASGIApp(manager)))
+
+    @app.get("/grade", response_model=GradeResponse)
+    async def grade(  # pyright: ignore[reportUnusedFunction]
+        x_grade_token: Annotated[str | None, Header()] = None,
+    ) -> Response:
+        if x_grade_token is None or not hmac.compare_digest(
+            x_grade_token.encode(), settings.grade_token.encode()
+        ):
+            return JSONResponse({"error": "forbidden"}, status_code=403)
+        async with lock:
+            reason, score = await session.close()
+            steps = session.steps_used
+        transcript = read_transcript(path)
+        records = [transcript.header, *transcript.steps, transcript.footer]
+        logger.info("episode graded")
+        return JSONResponse(
+            GradeResponse(
+                task=task.spec.ref,
+                seed=seed,
+                reward=score.total,
+                breakdown=score.breakdown,
+                flags=score.flags,
+                steps=steps,
+                stop_reason=reason,
+                transcript=[r.model_dump(mode="json") for r in records],
+            ).model_dump(mode="json")
+        )
+
+
+def create_app(settings: Settings | None = None, store: SessionStore | None = None) -> FastAPI:
+    """Build the app. `store` lets tests inject a store with a fake clock.
+
+    Api mode serves `/v1`. Sidecar mode serves one episode on `/mcp` and `/grade`, no `/v1`.
+    """
+    settings = settings or Settings()
+    logger = configure_logging(settings.log_level)
+    if settings.mode == "sidecar" and not settings.grade_token:
+        raise ValueError("GRADE_TOKEN is required in sidecar mode")
+
+    @contextlib.asynccontextmanager
+    async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
+        if settings.mode != "sidecar":
+            yield
+            return
+        session: EpisodeSession = app.state.sidecar_session
+        manager: StreamableHTTPSessionManager = app.state.mcp_manager
+        job = Job(task=session.task.spec.ref, policy="external", seed=settings.sidecar_seed)
+        await session.start(policy_name="external", job=job)
+        try:
+            async with manager.run():
+                yield
+        finally:
+            # Drop a half-written transcript if nobody graded the episode.
+            if not session.closed:
+                await session.close()
+
+    app = FastAPI(
+        title="Night Shift Gym",
+        docs_url=None,
+        redoc_url=None,
+        openapi_url=None,
+        lifespan=lifespan,
+    )
+
+    @app.get("/healthz", response_class=PlainTextResponse)
+    async def healthz() -> str:  # pyright: ignore[reportUnusedFunction]
+        return "ok"
+
+    if settings.mode == "sidecar":
+        _add_sidecar_routes(app, settings, logger)
+    else:
+        sessions: SessionStore = store or InMemorySessionStore(settings.session_ttl_seconds)
+        _add_api_routes(app, settings, sessions, logger)
     return app
 
 

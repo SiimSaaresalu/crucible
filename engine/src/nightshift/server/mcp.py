@@ -1,0 +1,55 @@
+"""The MCP server for one episode: the task's tools, called through an `EpisodeSession`."""
+
+import asyncio
+import json
+from typing import Any
+
+import mcp.types as types
+from mcp.server.context import ServerRequestContext
+from mcp.server.lowlevel import Server
+from pydantic import JsonValue
+
+from nightshift.core.session import EpisodeSession
+from nightshift.core.tools import ToolCall
+
+
+def build_mcp_server(session: EpisodeSession, lock: asyncio.Lock) -> Server[dict[str, Any]]:
+    """Build the low-level MCP server. Tools come from the task's `ToolSpec`s at runtime.
+
+    `lock` allows one call at a time, as in the HTTP API. A bad call never raises: the
+    `ToolResult` says what was wrong and `isError` is set.
+    """
+    specs = session.task.tools()
+
+    async def list_tools(
+        ctx: ServerRequestContext[dict[str, Any]], params: types.PaginatedRequestParams | None
+    ) -> types.ListToolsResult:
+        return types.ListToolsResult(
+            tools=[
+                types.Tool(name=s.name, description=s.description, input_schema=s.json_schema())
+                for s in specs
+            ]
+        )
+
+    async def call_tool(
+        ctx: ServerRequestContext[dict[str, Any]], params: types.CallToolRequestParams
+    ) -> types.CallToolResult:
+        args: dict[str, JsonValue] = dict(params.arguments or {})
+        async with lock:
+            result = await session.step(ToolCall(name=params.name, args=args))
+        dumped = result.model_dump(mode="json")
+        return types.CallToolResult(
+            content=[types.TextContent(text=json.dumps(dumped, sort_keys=True))],
+            structured_content=dumped,
+            is_error=not result.ok,
+        )
+
+    return Server(
+        "nightshift",
+        instructions=session.task.instruction(),
+        on_list_tools=list_tools,
+        on_call_tool=call_tool,
+    )
+
+
+__all__ = ["build_mcp_server"]

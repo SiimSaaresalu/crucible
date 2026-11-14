@@ -1,8 +1,10 @@
 """Client side: play a `Policy` against a running server."""
 
-from typing import Protocol, Self
+from collections.abc import Awaitable, Callable
+from typing import Any, Protocol, Self
 
 import httpx
+from mcp import Client
 from pydantic import BaseModel, ConfigDict
 
 from nightshift.core.policy import Policy
@@ -76,6 +78,64 @@ class HttpEpisode:
             await self._client.aclose()
 
 
+async def fetch_grade(base_url: str, token: str) -> RemoteOutcome:
+    """Read the outcome from a sidecar's `/grade` route. The agent has no token, a harness has."""
+    async with httpx.AsyncClient(base_url=base_url, timeout=60.0) as client:
+        response = await client.get("/grade", headers={"x-grade-token": token})
+        response.raise_for_status()
+        body = response.json()
+    score = Score(total=body["reward"], breakdown=body["breakdown"], flags=body["flags"])
+    return RemoteOutcome(score=score, steps=body["steps"], stop_reason=body["stop_reason"])
+
+
+class McpEpisode:
+    """The one episode of a sidecar, played over MCP.
+
+    The agent cannot grade, so `close()` only closes the connection. With a `grade` callback
+    (a harness that has the token, see `fetch_grade`) it returns that outcome. Without one it
+    returns an ungraded outcome (`flags["ungraded"]`, score 0, the client's own step count and
+    `policy_stop`), which must not be read as a score.
+    """
+
+    def __init__(
+        self, client: Client, grade: Callable[[], Awaitable[RemoteOutcome]] | None = None
+    ) -> None:
+        self._client = client
+        self._grade = grade
+        self.steps = 0
+
+    @classmethod
+    async def connect(
+        cls, url: str, *, grade: Callable[[], Awaitable[RemoteOutcome]] | None = None
+    ) -> tuple[Self, str]:
+        """Connect to the MCP endpoint at `url`. Return the episode and the instruction.
+
+        Call `close()` from the same task that called `connect()`.
+        """
+        client = Client(url)
+        await client.__aenter__()
+        return cls(client, grade), client.instructions or ""
+
+    async def step(self, call: ToolCall) -> ToolResult:
+        self.steps += 1
+        raw = await self._client.call_tool(call.name, dict(call.args))
+        structured: Any = raw.structured_content
+        if isinstance(structured, dict):
+            return ToolResult.model_validate(structured)
+        text = " ".join(getattr(block, "text", "") for block in raw.content)
+        return ToolResult(ok=False, error=text or "Empty MCP result")
+
+    async def close(self) -> RemoteOutcome:
+        await self._client.__aexit__(None, None, None)
+        if self._grade is not None:
+            return await self._grade()
+        return RemoteOutcome(
+            score=Score(total=0.0, flags={"ungraded": True}),
+            steps=self.steps,
+            stop_reason="policy_stop",
+        )
+
+
 async def drive(
     policy: Policy,
     remote: RemoteEpisode,
@@ -96,4 +156,11 @@ async def drive(
     return await remote.close()
 
 
-__all__ = ["HttpEpisode", "RemoteEpisode", "RemoteOutcome", "drive"]
+__all__ = [
+    "HttpEpisode",
+    "McpEpisode",
+    "RemoteEpisode",
+    "RemoteOutcome",
+    "drive",
+    "fetch_grade",
+]
