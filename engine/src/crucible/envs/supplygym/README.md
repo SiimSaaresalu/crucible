@@ -6,6 +6,22 @@ two pricier alternative suppliers. Hidden disruptions (strikes, port closures, f
 bankruptcies) hit suppliers and spread down the tiers. The agent sees noisy news, rumors, risk
 scores, late orders and fill ratios. Synthetic supplier graph; not real data.
 
+Version 2 is available as `supplygym@2`, `supplygym-fresh@2`, and
+`supplygym-cala@2`. Its fixed outcome rubric awards 1.0, 0.5, or 0.0 for verified
+completion, service, and operating surplus. The scenario runner evaluates a
+frozen schedule and saves every outcome and audit trace. Run
+`python -m crucible.envs.supplygym.scenarios --help` from `engine` for the
+`freeze`, `run`, and `audit` commands. The specification and measured control
+results are in [outcome scoring](../../../../../docs/supplygym/OUTCOME_SCORING.md).
+
+Opt-in `supplygym-cala@3` retains the version 2 controls and completion rule. Its
+score is completed operating surplus divided by a positive scenario-specific theoretical
+upper bound, clamped to [0, 1]; unfinished episodes score zero. The verifier computes the
+bound from the seeded and salted hidden scenario before any action. It relaxes purchase
+and shipment constraints, so the bound need not be attainable. Trusted score breakdowns
+include the bound and ledger accounting. Export it using the normal Harbor export command
+with `--task supplygym-cala@3`.
+
 | | |
 |---|---|
 | Refs | `supplygym@1` (calibration regime), `supplygym-fresh@1` (fresh regime) |
