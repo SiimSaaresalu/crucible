@@ -64,8 +64,11 @@ async def test_tasks(client: httpx.AsyncClient) -> None:
         "guess@1",
         "incident@1",
         "supplygym@1",
+        "supplygym@2",
         "supplygym-cala@1",
+        "supplygym-cala@2",
         "supplygym-fresh@1",
+        "supplygym-fresh@2",
     ]
 
 
